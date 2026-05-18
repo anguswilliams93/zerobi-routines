@@ -8,10 +8,10 @@ You run in a remote sandbox — **no access to local files**. All state lives in
 
 ## Tools
 
-- **Google Calendar / Tasks / Sheets / Drive** → `mcp__zapier__google_*`
-- **Gmail inbox** → `mcp__zapier__gmail_find_email` (query `in:inbox is:unread`)
-- **Xero** → `mcp__claude_ai_Xero__*` (read-only — get_cash_position, get_contacts_and_receivables)
-- **Email send** → `mcp__zapier__gmail_send_email` (self-email only — to angus@zerobi.au, from angus@zerobi.au). Drafts via `mcp__zapier__gmail_create_draft` for replies if needed.
+- **Google Calendar / Tasks / Sheets / Drive** → `mcp__Zapier__google_*`
+- **Gmail inbox** → `mcp__Zapier__gmail_find_email` (query `in:inbox is:unread`)
+- **Xero** → `mcp__Zapier__xero_find_invoice`, `mcp__Zapier__xero_find_contact` (native Zapier actions only — no raw API requests)
+- **Email send** → `mcp__Zapier__gmail_send_email` (self-email only — to angus@zerobi.au, from angus@zerobi.au). Drafts via `mcp__Zapier__gmail_create_draft_reply` for replies if needed.
 
 ---
 
@@ -21,7 +21,7 @@ You run in a remote sandbox — **no access to local files**. All state lives in
 
 - Google Calendar events today (Brisbane time)
 - Gmail unread since yesterday (`in:inbox is:unread`)
-- Xero cash position + receivables
+- Xero receivables: `mcp__Zapier__xero_find_invoice` — search for recent AUTHORISED invoices for key contacts (Perigon Group, others known from tasks)
 - Google Tasks: list ALL open tasks in "My Tasks", `show_completed=false`
 - Google Tasks: list completed tasks in last 24h (`show_completed=true`) — to detect ticked-off items
 
@@ -80,8 +80,7 @@ For each action item surfaced (overdue bill, invoice chase, ATO obligation, etc.
    - If title is unparseable (still has the original `Perigon timesheet — week ending …` text, or contains non-numeric text) → flag `Perigon timesheet task completed but title not retitled to a number — week ending <date>` in briefing. Skip the rest.
 
 2. Pull current Perigon Group draft invoice from Xero:
-   - `mcp__claude_ai_Xero__get_contacts_and_receivables` — find Perigon Group's most recent invoice.
-   - If best path available, also look for DRAFT invoices via Xero search; otherwise use the most recent authorised invoice as the comparison baseline.
+   - `mcp__Zapier__xero_find_invoice` — search for the most recent Perigon Group invoice (try by known invoice number from open tasks, or recent INV- numbers).
    - Identify the day-count line item (rate around $950 +GST/day for ART contracting). Extract current quantity.
 
 3. Compute delta:
@@ -118,30 +117,27 @@ For each action item surfaced (overdue bill, invoice chase, ATO obligation, etc.
 - If `mcp__zapier__xero_find_invoice` returns no draft Perigon invoice at all → add to briefing `No draft Perigon invoice found for week ending <date>. Create one manually. [new]` and skip.
 
 ```
-📋 Daily briefing — YYYY-MM-DD
+Daily briefing — YYYY-MM-DD
+============================
 
-Bottom line: <1 sentence with $ amounts and overdue flags>
+<1-sentence bottom line: lead with $ amounts and any overdue flags>
 
-## Calendar
-- <events or "empty">
+CALENDAR
+<list events as "HH:MM — Event title (location)" or "Nothing scheduled">
 
-## Inbox triage
-- N unread total → M action / K reference / J archived (marketing+junk)
-- Drafts awaiting review:
-  - [Sender] — "[Subject]" — Q: [question summary]
-- New labels created this run: [list]
+INBOX  (<N> unread)
+<list each email as "From — Subject — [category]">
+Drafts queued:
+  <list as "→ [Sender] re: [Subject] — [question summary]">
+<or "Nothing to triage" if empty>
 
-## Xero
-| Cash | $X |
-| Receivables | $X (N invoices) |
-| Payables | $X |
-| Working capital | $X |
-<overdue invoices listed inline>
+MONEY
+<list each invoice as "INV-XXXX  Perigon Group  $X,XXX  due DD Mon  [AUTHORISED/DRAFT]">
+<or "No outstanding invoices found">
 
-## Actions
-| # | Action | $ | Status |
-|---|---|---|---|
-| 1 | <action> | <amount> | [new] / [tracked] / [done since last run] / [flag-for-close] |
+ACTIONS
+  1. <action>  $<amount>  [new/tracked/done/flag-for-close]
+  2. ...
 ```
 
 ### 4. Send self-email
