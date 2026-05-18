@@ -10,6 +10,9 @@ Each `.md` file under `prompts/` is the prompt body for one routine.
 |---|---|---|
 | `prompts/daily-routine.md` | Daily morning routine + email triage | 7am AEST daily (21:00 UTC prev day) |
 | `prompts/meeting-prep.md` | Per-meeting prep brief (now → tomorrow 6pm lookahead, dedupe via Sent label) | 7am + 4pm Brisbane daily |
+| `prompts/weekly-timesheet-ask.md` | Friday self-email asking "Days worked for Perigon this week?" | 4pm Brisbane Friday |
+
+Monday's daily routine reads the Friday reply and reconciles against Perigon's draft Xero invoice.
 
 ## Update flow
 

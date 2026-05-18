@@ -67,7 +67,32 @@ For each action item surfaced (overdue bill, invoice chase, ATO obligation, etc.
 - NEVER recreate a task that already exists open.
 - NEVER recreate a task user has completed.
 
-### 3. Compose briefing
+### 2b. Monday-only: reconcile Perigon timesheet
+
+**Only run this step if today (Brisbane) is Monday.** Skip silently otherwise.
+
+1. Find the most recent reply to last Friday's timesheet email:
+   - `mcp__zapier__gmail_find_email` with query `subject:"Timesheet: week ending" from:angus@zerobi.au` (limit 5, newest first).
+   - Get the most recent thread. Read replies. Find the latest reply FROM angus@zerobi.au (not the original autosent message).
+   - Parse the first non-empty line as a number (the day count). Capture any optional note from the second line.
+   - If no reply found, or reply unparseable → note "No timesheet reply for week ending <date>" in briefing actions. Skip the rest of this step.
+
+2. Pull current Perigon Group draft invoice from Xero:
+   - `mcp__claude_ai_Xero__get_contacts_and_receivables` — find Perigon Group's most recent invoice.
+   - If best path available, also look for DRAFT invoices via Xero search; otherwise use the most recent authorised invoice as the comparison baseline.
+   - Identify the day-count line item (rate around $950 +GST/day for ART contracting). Extract current quantity.
+
+3. Compute delta:
+   - `reported_days` from email reply
+   - `invoiced_days` from Xero line item qty
+   - `delta = reported_days − invoiced_days`
+
+4. Add to the daily briefing's Actions table:
+   - If `delta == 0`: `Perigon timesheet matches invoice (N days) [tracked]`
+   - If `delta != 0`: `🔴 Perigon invoice mismatch: reported N, invoiced M, delta D. Fix manually in Xero: <invoice link from Xero MCP> [new]`
+   - Also create a Google Task: `Fix Perigon invoice INV-XXXX: change qty to N days` due today.
+
+**Do not auto-edit the invoice.** Xero writes are PSI-sensitive — Angus updates manually.
 
 ```
 📋 Daily briefing — YYYY-MM-DD
