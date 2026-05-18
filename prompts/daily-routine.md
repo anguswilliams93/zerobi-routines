@@ -87,12 +87,33 @@ For each action item surfaced (overdue bill, invoice chase, ATO obligation, etc.
    - `invoiced_days` from Xero line item qty
    - `delta = reported_days − invoiced_days`
 
-4. Add to the daily briefing's Actions table:
-   - If `delta == 0`: `Perigon timesheet matches invoice (N days) [tracked]`
-   - If `delta != 0`: `🔴 Perigon invoice mismatch: reported N, invoiced M, delta D. Fix manually in Xero: <invoice link from Xero MCP> [new]`
-   - Also create a Google Task: `Fix Perigon invoice INV-XXXX: change qty to N days` due today.
+4. Decide action by invoice status:
 
-**Do not auto-edit the invoice.** Xero writes are PSI-sensitive — Angus updates manually.
+   **If `delta == 0`** → no action. Add to briefing: `Perigon timesheet matches invoice (N days) [tracked]`.
+
+   **If `delta != 0` AND invoice status == `draft`** → void + recreate with correct qty:
+   1. Capture from the existing draft: `invoice_number`, `contact_id`, `date`, `due_date`, `reference`, `branding_theme`, `line_amount_types`, all line items (description, account code, unit amount, tax type, tracking).
+   2. Capture the existing `invoice_id`.
+   3. Build the new invoice payload:
+      - Same metadata as captured.
+      - Same line items, EXCEPT the day-count line: change `line_quantity` to `reported_days`.
+      - `status: draft`
+      - `number`: explicitly set to the captured invoice_number (Xero will preserve it provided the original is voided first).
+   4. `mcp__zapier__xero_update_sales_invoice` on the existing `invoice_id` with `invoice_status: voided`.
+   5. `mcp__zapier__xero_create_sales_invoice` with the new payload.
+   6. Verify: `mcp__zapier__xero_find_invoice` by number — confirm one draft exists with correct qty. If two drafts or zero, ABORT and add `🔴 Perigon invoice rebuild failed — investigate manually` to briefing.
+   7. `mcp__zapier__xero_add_note_to_invoice` on the new invoice: `Auto-rebuilt from voided draft <old_invoice_id> by daily routine. Reason: timesheet reconciliation. Old qty <invoiced_days>, new qty <reported_days>.`
+   8. Add to briefing: `Perigon invoice INV-XXXX rebuilt: <invoiced_days>→<reported_days> days [done]`.
+
+   **If `delta != 0` AND invoice status != `draft`** (authorised/submitted/sent) → DO NOT modify:
+   - Add to briefing: `🔴 Perigon invoice INV-XXXX already <status>: reported <reported_days>, invoiced <invoiced_days>. Issue credit note OR send corrected invoice. [new]`
+   - Create Google Task: `Issue Perigon credit note / corrected invoice — delta <delta> days` due today.
+
+**Hard rules:**
+- Only act on `draft` status invoices. Never modify approved/sent invoices.
+- Always verify after rebuild — abort+flag if state is ambiguous.
+- Always leave a `xero_add_note_to_invoice` audit trail naming the routine.
+- If `mcp__zapier__xero_find_invoice` returns no draft Perigon invoice at all → add to briefing `No draft Perigon invoice found for week ending <date>. Create one manually. [new]` and skip.
 
 ```
 📋 Daily briefing — YYYY-MM-DD
