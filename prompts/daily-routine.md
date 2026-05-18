@@ -164,48 +164,113 @@ Reconciles the response to LAST Friday's 4pm ask (created ~7 days ago, completed
 - Always leave a `xero_add_note_to_invoice` audit trail naming the routine.
 - If `mcp__zapier__xero_find_invoice` returns no draft Perigon invoice at all → add to briefing `No draft Perigon invoice found for week ending <date>. Create one manually. [new]` and skip.
 
+**Email format:** HTML. Use the template below. Inline CSS only (Gmail strips `<style>`). Tables for layout (most reliable across clients). Keep mobile-readable — max-width 600px, no horizontal scroll.
+
+Empty sections collapse to a single muted line (e.g. `<p class="empty">No outstanding invoices</p>`). Don't render empty bullet lists or scaffolding placeholders.
+
+```html
+<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f4f4f5;font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#0f172a;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:24px 0;">
+  <tr><td align="center">
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:8px;overflow:hidden;">
+
+      <!-- Header -->
+      <tr><td style="background:#0f172a;color:#fff;padding:18px 24px;">
+        <div style="font-size:13px;letter-spacing:1px;opacity:0.7;text-transform:uppercase;">Zerobi Daily Brief</div>
+        <div style="font-size:18px;font-weight:600;margin-top:2px;">{{DATE_LONG}}</div>
+      </td></tr>
+
+      <!-- TL;DR -->
+      <tr><td style="padding:20px 24px 8px;font-size:15px;line-height:1.5;border-bottom:1px solid #e4e4e7;">
+        <strong>{{ONE_LINE_BOTTOM_LINE}}</strong>
+      </td></tr>
+
+      <!-- Cash -->
+      <tr><td style="padding:18px 24px 4px;">
+        <div style="font-size:11px;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:6px;">Cash</div>
+        <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
+          {{CASH_ROWS — one per account, e.g.}}
+          <tr><td style="padding:3px 0;color:#475569;">Business · {{Account}}</td><td align="right" style="padding:3px 0;font-variant-numeric:tabular-nums;">${{X,XXX.XX}}</td></tr>
+          <tr><td style="padding:3px 0;color:#475569;">Personal · {{Account}}</td><td align="right" style="padding:3px 0;font-variant-numeric:tabular-nums;">${{X,XXX.XX}}</td></tr>
+        </table>
+      </td></tr>
+
+      <!-- Calendar -->
+      <tr><td style="padding:18px 24px 4px;border-top:1px solid #f1f5f9;">
+        <div style="font-size:11px;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:6px;">Calendar</div>
+        <div style="font-size:14px;line-height:1.6;">
+          {{CALENDAR — each event as "<strong>HH:MM</strong> &middot; Title <span style='color:#94a3b8;'>· location</span><br>" or empty-state}}
+        </div>
+      </td></tr>
+
+      <!-- Inbox -->
+      <tr><td style="padding:18px 24px 4px;border-top:1px solid #f1f5f9;">
+        <div style="font-size:11px;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:6px;">Inbox <span style="color:#94a3b8;font-weight:normal;">· {{N}} unread</span></div>
+        <div style="font-size:14px;line-height:1.6;">
+          {{INBOX_LINES — each as "From <span style='color:#94a3b8;'>· Subject</span> <span style='display:inline-block;padding:1px 6px;background:#f1f5f9;border-radius:3px;font-size:11px;color:#475569;'>category</span><br>"}}
+        </div>
+        {{IF DRAFTS_QUEUED: render compact list under "Drafts queued" label, else omit entire block}}
+      </td></tr>
+
+      <!-- Money -->
+      <tr><td style="padding:18px 24px 4px;border-top:1px solid #f1f5f9;">
+        <div style="font-size:11px;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:6px;">Money</div>
+        <table width="100%" cellpadding="0" cellspacing="0" style="font-size:13px;">
+          {{For each outstanding invoice}}
+          <tr>
+            <td style="padding:4px 0;color:#0f172a;">INV-XXXX · Perigon Group</td>
+            <td align="right" style="padding:4px 0;font-variant-numeric:tabular-nums;">${{X,XXX}}</td>
+            <td align="right" style="padding:4px 0 4px 10px;color:#94a3b8;font-size:12px;">due DD Mon</td>
+          </tr>
+          {{For each matched payment — green tick prefix}}
+          <tr>
+            <td style="padding:4px 0;color:#15803d;">✓ INV-XXXX · {{Contact}}</td>
+            <td align="right" style="padding:4px 0;font-variant-numeric:tabular-nums;color:#15803d;">${{X,XXX}}</td>
+            <td align="right" style="padding:4px 0 4px 10px;color:#94a3b8;font-size:12px;">paid DD Mon</td>
+          </tr>
+          {{For each unmatched credit — amber}}
+          <tr>
+            <td style="padding:4px 0;color:#b45309;">? Unmatched · {{payer}}</td>
+            <td align="right" style="padding:4px 0;font-variant-numeric:tabular-nums;color:#b45309;">${{X,XXX}}</td>
+            <td align="right" style="padding:4px 0 4px 10px;color:#94a3b8;font-size:12px;">DD Mon</td>
+          </tr>
+        </table>
+      </td></tr>
+
+      <!-- Actions -->
+      <tr><td style="padding:18px 24px 22px;border-top:1px solid #f1f5f9;">
+        <div style="font-size:11px;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:8px;">Actions</div>
+        <ol style="margin:0;padding-left:18px;font-size:14px;line-height:1.7;">
+          {{For each action — status pill at end}}
+          <li>{{Action}} <span style="color:#94a3b8;">· ${{amount}}</span> <span style="display:inline-block;padding:1px 6px;background:#f1f5f9;border-radius:3px;font-size:11px;color:#475569;margin-left:4px;">{{status}}</span></li>
+        </ol>
+      </td></tr>
+
+      <!-- Optional: Bleed check (Wed only) -->
+      {{IF WEDNESDAY: append the bleed-check section using the same row pattern as Money, header label "Bleed check"}}
+
+    </table>
+    <div style="font-size:11px;color:#94a3b8;margin-top:12px;">Generated {{TIMESTAMP}} · Reply or edit tasks in Google Tasks</div>
+  </td></tr>
+</table>
+</body></html>
 ```
-Daily briefing — YYYY-MM-DD
-============================
 
-<1-sentence bottom line: lead with $ amounts and any overdue flags>
+**Status pill colours** (background / text):
+- `[new]` → `#fef3c7` / `#92400e` (amber)
+- `[tracked]` → `#f1f5f9` / `#475569` (slate)
+- `[done]` → `#dcfce7` / `#166534` (green)
+- `[flag-for-close]` → `#fee2e2` / `#991b1b` (red)
 
-CASH
-Business:  <Account name>  $X,XXX.XX
-           <Account name>  $X,XXX.XX
-Personal:  <Account name>  $X,XXX.XX
-<or "Redbark unavailable — bank balances skipped">
-
-CALENDAR
-<list events as "HH:MM — Event title (location)" or "Nothing scheduled">
-
-INBOX  (<N> unread)
-<list each email as "From — Subject — [category]">
-Drafts queued:
-  <list as "→ [Sender] re: [Subject] — [question summary]">
-<or "Nothing to triage" if empty>
-
-MONEY
-Outstanding:
-  <list each invoice as "INV-XXXX  Perigon Group  $X,XXX  due DD Mon  [AUTHORISED/DRAFT]">
-  <or "No outstanding invoices found">
-Paid (last 3 days):
-  <list each matched credit as "INV-XXXX  Contact  $X,XXX  paid DD Mon">
-  <or "No new payments matched">
-Unmatched credits:
-  <list as "DD Mon  $X,XXX  from <payer>"  or "None">
-
-
-ACTIONS
-  1. <action>  $<amount>  [new/tracked/done/flag-for-close]
-  2. ...
-```
+**Subject line:** `Zerobi daily brief — {{DATE_SHORT}}` (e.g. `Zerobi daily brief — Wed 21 May`).
 
 ### 4. Send self-email
 
 - `mcp__zapier__gmail_send_email` to angus@zerobi.au from angus@zerobi.au.
-- Subject: `Daily briefing — YYYY-MM-DD`
-- Body: the briefing from step 3.
+- Subject: `Zerobi daily brief — <Day DD Mon>` (e.g. `Zerobi daily brief — Wed 21 May`).
+- Body type: **HTML** (set the body-type / content-type field accordingly on the Zapier action).
+- Body: the rendered HTML from step 3 with all `{{...}}` placeholders filled and any empty sections collapsed.
 
 ---
 
