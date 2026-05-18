@@ -1,0 +1,7 @@
+{
+  "tool_name": "mcp__zapier__microsoft_outlook_make_api_get_request",
+  "tool_input_preview": "{\"instructions\":\"Fetch today's unread emails from the Inbox via Graph API. Today is 2026-05-12 AEST (UTC+10). Filter by isRead=false and receivedDateTime >= today AEST start (2026-05-11T14:00:00Z).\",\"...",
+  "error": "MCP error -32602: Tool microsoft_outlook_make_api_get_request not found",
+  "timestamp": "2026-05-12T07:52:50.903Z",
+  "retry_count": 1
+}

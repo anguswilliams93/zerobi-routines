@@ -1,0 +1,11 @@
+{
+  "_meta": { "fetched_at": "2026-05-12T18:17:00+10:00", "source": "claude_ai_Xero__get_top_customers_by_revenue", "ok": true },
+  "fy": "FY26",
+  "customers": [
+    { "name": "Perigon Group",         "amount": 188622.50, "pct": 84.74, "tag": "ART contracting · Halcyon Knights", "psi": true  },
+    { "name": "Splatt Lawyers PTY LTD","amount":  21670.00, "pct":  9.74, "tag": "data integration · subscription",  "psi": false },
+    { "name": "LAND BASED SERVICE",    "amount":  12287.00, "pct":  5.52, "tag": "cleanup app dev",                  "psi": false }
+  ],
+  "psi_total_pct": 89.24,
+  "psi_failed": true
+}

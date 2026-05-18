@@ -1,0 +1,21 @@
+{
+  "_meta": { "fetched_at": "2026-05-12T18:17:00+10:00", "source": "claude_ai_Xero__get_profit_and_loss", "ok": true },
+  "period": "FY26",
+  "revenue_ytd": 211372.95,
+  "expenses_ytd": 192057.60,
+  "net_profit_ytd": 19315.35,
+  "net_margin_pct": 9.14,
+  "revenue_by_account": [
+    { "name": "Sales - Contracting", "amount": 180500 },
+    { "name": "Sales - Subscriptions", "amount": 19700 },
+    { "name": "Sales - Cleanup Application", "amount": 11170 },
+    { "name": "Interest Income", "amount": 2.95 }
+  ],
+  "top_expenses": [
+    { "name": "Wages and Salaries", "amount": 140095.90 },
+    { "name": "Superannuation", "amount": 16811.58 },
+    { "name": "Office Expenses", "amount": 8104.16 },
+    { "name": "Subscriptions - Business Operations", "amount": 6523.84 },
+    { "name": "Accounting", "amount": 5164.00 }
+  ]
+}

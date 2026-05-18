@@ -352,6 +352,64 @@ These two sections are non-negotiable transparency — never drop them, even whe
 - Body type: **HTML** (set the body-type / content-type field accordingly on the Zapier action).
 - Body: the rendered HTML from step 3 with all `{{...}}` placeholders filled and any empty sections collapsed.
 
+### 5. Update dashboard raw store
+
+Final step. Reuse the data already pulled — no new MCP fetches. Write JSON payloads to the `zerobi-dashboard-raw/` Google Drive folder so the local dashboard sync (`zerobi/dashboard/raw/`) ingests them on next refresh.
+
+**Transport:** Zapier Google Drive. For each file below:
+
+1. `mcp__zapier__google_drive_find_a_file` in folder `zerobi-dashboard-raw/<subpath>` by name (e.g. `calendar.json` inside `zerobi-dashboard-raw/daily/`).
+2. If found → `mcp__zapier__google_drive_replace_file` with new content, MIME `application/json`.
+3. If not found → `mcp__zapier__google_drive_create_file_from_text` in the same folder, same name, MIME `application/json`.
+
+If the folder doesn't exist or Drive errors → note `Dashboard sync failed — <reason>` under `Done this run` in the briefing (don't re-send the email; just log). Never block the run on this step.
+
+**Schema:** payloads must validate against `zerobi/dashboard/lib/schema.ts`. Every file gets a `_meta` envelope `{ fetched_at, source, ok, note? }`. `fetched_at` = ISO 8601 with Brisbane offset, recorded at fetch time in step 1 (not write time).
+
+**Files to write** (only the ones the routine has data for — skip the rest, the weekly scheduler owns them):
+
+```
+daily/calendar.json       ← step 1 Calendar events
+{ "_meta": {...}, "events": [{ id, start, end?, title, attendees[], location?, link?, all_day }] }
+
+daily/actions.json        ← every Google Task created this run (kind="task")
+                            + flagged-for-close items (kind="task", detail prefixed "FLAG: ")
+                            + drafts queued (kind="draft", title = recipient + subject)
+{ "_meta": {...}, "actions": [{ kind, title, detail?, created_at }] }
+
+financial/cash.json       ← Redbark Business balances (sum) + Xero AR/AP from step 1
+{ "_meta": {...}, "cash_at_bank": <sum Business account balances>,
+  "receivables": <sum AUTHORISED Xero invoices>,
+  "payables": <sum DRAFT+AUTHORISED bills if pulled, else 0>,
+  "working_capital": cash_at_bank + receivables − payables,
+  "status": "healthy" | "tight" | "critical" }
+  Status thresholds: critical if cash < 5000, tight if cash < 15000, else healthy.
+
+financial/receivables.json ← AUTHORISED Xero invoices from step 1
+{ "_meta": {...},
+  "items": [{ contact, amount, due_date?, days_overdue }],
+  "total": <sum amount> }
+  days_overdue: 0 if not yet due, else (today − due_date) in days.
+
+meta.json                 ← rewrite the whole file; merge — preserve other sources you didn't touch
+{ "generated_at": <now ISO Brisbane>,
+  "week": <ISO week number>,
+  "fy": "FY<YY>" (Australian FY: July–June; e.g. May 2026 → FY26),
+  "sources": { "<relpath>": { fetched_at, source, ok, note? }, ... } }
+  For each file you wrote, add/overwrite a sources entry keyed by relative path.
+  Source strings to use (match existing convention):
+    daily/calendar.json       → "zapier_google_calendar_find_events"
+    daily/actions.json        → "daily-routine"
+    financial/cash.json       → "redbark + claude_ai_Xero__find_invoice"
+    financial/receivables.json → "claude_ai_Xero__find_invoice"
+  If Redbark was unavailable in step 1, still write `financial/cash.json` with `_meta.ok = false`, `_meta.note = "redbark unavailable"`, and omit numeric fields you can't fill (use 0; mark status="tight" as a safe default). Same pattern for any other source failure — `ok=false` + note, never silently lie.
+
+**Skip these files entirely** — the weekly scheduler populates them and overwriting with partial data corrupts the dashboard: `daily/unread.json`, `daily/invoices.json`, `daily/gmail-drafts.json`, `weekly/*`, `financial/pl.json`, `financial/balance-sheet.json`, `financial/customers.json`, `financial/bank-spend.json`, `deadlines.json`.
+
+**Idempotency:** every file is a full overwrite, not append. Running the routine twice in one day is safe — second run wins.
+
+Add a single bullet to `Done this run` in the briefing: `Updated dashboard — N files written (calendar, actions, cash, receivables, meta)` or `Dashboard sync failed — <reason>`. Do this BEFORE step 4 sends the email so the briefing reflects step 5's outcome — i.e. swap the actual ordering to: pull (1) → triage (1b/1c) → reconcile (2/2b/2c) → render briefing draft (3) → write dashboard (5) → finalise briefing with step-5 bullet → send (4).
+
 ---
 
 ## Style

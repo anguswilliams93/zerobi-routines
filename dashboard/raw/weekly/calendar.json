@@ -1,0 +1,14 @@
+{
+  "_meta": { "fetched_at": "2026-05-12T18:17:00+10:00", "source": "zapier_google_calendar_find_events", "ok": true },
+  "range": { "start": "2026-05-11", "end": "2026-05-17" },
+  "events": [
+    {
+      "id": "dpcjcb7ku4cp6dpkotn0nphr7o",
+      "start": "2026-05-12",
+      "title": "🔧 Reconnect Zapier → Xero (ZEROBI PTY LTD)",
+      "attendees": [],
+      "link": "https://www.google.com/calendar/event?eid=ZHBjamNiN2t1NGNwNmRwa290bjBucGhyN28gYW5ndXNAemVyb2JpLmF1&ctz=Australia/Sydney",
+      "all_day": true
+    }
+  ]
+}

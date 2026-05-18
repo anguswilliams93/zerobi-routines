@@ -1,0 +1,23 @@
+{
+  "_meta": { "fetched_at": "2026-05-12T18:18:00+10:00", "source": "scheduler-weekly-run", "ok": true },
+  "actions": [
+    {
+      "kind": "task",
+      "title": "Pay Coastal Lawns $77 — OVERDUE INV-0719",
+      "detail": "Google Task created · due 2026-05-12 · task_id QU5FMWc3SUZ2cjViVjR5YQ · migrated from calendar event 452ojhprssvnuk857rerl49qb4 (event deleted)",
+      "created_at": "2026-05-12T17:57:00+10:00"
+    },
+    {
+      "kind": "task",
+      "title": "Pay Studio 4 Rehab — INV-0091531 (amount on PDF)",
+      "detail": "Google Task created · due 2026-05-12 · task_id bTRlMEMxb2lQSmR0eDhJQQ · migrated from calendar event vb6i7j3s0t6voquokhfe0hldr0 (event deleted)",
+      "created_at": "2026-05-12T17:57:13+10:00"
+    },
+    {
+      "kind": "task",
+      "title": "Chase Perigon Group $4,180 — 1d overdue (INV-ZBI0123)",
+      "detail": "Google Task created · due 2026-05-12 · task_id MFVJNmR3LWpKal9sZGM5aw · auto-created from Xero AR sweep",
+      "created_at": "2026-05-12T18:18:08+10:00"
+    }
+  ]
+}

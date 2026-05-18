@@ -1,0 +1,9 @@
+{
+  "_meta": { "fetched_at": "2026-05-12T18:17:00+10:00", "source": "manual (CLAUDE.md)", "ok": true },
+  "items": [
+    { "label": "ATO Income Tax",        "date": "2026-05-15", "amount": 18473, "note": "Pay from offset @ 6.5%. Never use ATO plan @ 10.9%." },
+    { "label": "$82K Franked Dividend", "date": "2026-06-30", "amount": 82000, "note": "Declare before EOFY → KHI → Bianca. Clears shareholder loan + deferred tax." },
+    { "label": "BAS Q4 FY26",           "date": "2026-07-28", "note": "GST + PAYG instalment." },
+    { "label": "PCG 2025/5",            "date": "2027-06-30", "note": "Trust distributions stop saving you. Need real non-PSI revenue before this." }
+  ]
+}

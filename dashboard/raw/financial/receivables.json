@@ -1,0 +1,8 @@
+{
+  "_meta": { "fetched_at": "2026-05-12T18:17:00+10:00", "source": "claude_ai_Xero__get_contacts_and_receivables", "ok": true },
+  "items": [
+    { "contact": "Perigon Group",         "amount": 4180, "due_date": "2026-05-11", "days_overdue": 1 },
+    { "contact": "Splatt Lawyers PTY LTD","amount": 1870, "due_date": "2026-05-15", "days_overdue": 0 }
+  ],
+  "total": 6050
+}

@@ -1,0 +1,21 @@
+{
+  "_meta": { "fetched_at": "2026-05-12T17:58:00+10:00", "source": "calendar-migration (inbox scan unavailable)", "ok": true },
+  "invoices": [
+    {
+      "vendor": "Coastal Lawns",
+      "amount_aud": 77.00,
+      "due_date": "2026-05-12",
+      "invoice_no": "INV-0719",
+      "in_budget": false,
+      "budget_match_note": "OVERDUE · migrated from calendar reminder to Google Task"
+    },
+    {
+      "vendor": "Studio 4 Rehab",
+      "amount_aud": 0,
+      "due_date": "2026-05-12",
+      "invoice_no": "INV-0091531",
+      "in_budget": false,
+      "budget_match_note": "Amount on PDF · migrated from calendar reminder to Google Task"
+    }
+  ]
+}

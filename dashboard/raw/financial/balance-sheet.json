@@ -1,0 +1,14 @@
+{
+  "_meta": { "fetched_at": "2026-05-12T18:17:00+10:00", "source": "claude_ai_Xero__get_financial_position", "ok": true },
+  "as_at": "2026-05-12",
+  "rows": [
+    { "section": "asset",     "label": "Cash at bank",        "value": 7429.51, "tone": "danger" },
+    { "section": "asset",     "label": "Accounts receivable", "value": 6050,    "tone": "default" },
+    { "section": "asset",     "label": "Non-current assets",  "sub": "fixed + shareholder loan", "value": 76771.78, "tone": "default" },
+    { "section": "total",     "label": "Total assets",        "value": 90251.29, "tone": "signal" },
+    { "section": "liability", "label": "Current liabilities", "sub": "GST/PAYG/payables", "value": 45881.96, "tone": "warning" },
+    { "section": "liability", "label": "Non-current liabilities", "value": 53802.72, "tone": "warning" },
+    { "section": "total",     "label": "Total liabilities",   "sub": "net (per Xero)", "value": 7920.76,  "tone": "default" },
+    { "section": "equity",    "label": "Net equity",          "value": 82330.53, "tone": "signal" }
+  ]
+}
