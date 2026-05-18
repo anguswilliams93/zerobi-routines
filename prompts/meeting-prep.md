@@ -1,6 +1,6 @@
 # Meeting prep — remote agent prompt
 
-Hourly check during Brisbane business hours. If a calendar event with external attendees starts in the next 75 minutes, send a prep brief.
+Runs twice daily (7am + 4pm Brisbane). Briefs every external meeting between now and tomorrow 6pm that hasn't already been briefed. Dedupe via Sent label.
 
 You run in a remote sandbox — no local file access.
 
@@ -17,20 +17,21 @@ You run in a remote sandbox — no local file access.
 
 ## Steps
 
-### 1. Find the next meeting
+### 1. Find unbriefed meetings
 
 `mcp__zapier__google_calendar_find_events`:
-- start_time = now + 75 minutes (Brisbane)
-- end_time = now (Brisbane)
+- end_time = now (Brisbane) — earliest event boundary
+- start_time = tomorrow 18:00 Brisbane — latest event boundary
 - ordering = startTime
 - expand_recurring = true
 
 Filter the results:
-- Must have at least one attendee whose email is NOT `angus@zerobi.au` (skip solo blocks)
-- Must start in the next 75 minutes
-- Must NOT have already had a prep email sent (check Sent label `Meeting-Prep/<event-id>` — see step 4)
+- Must have at least one attendee whose email is NOT `angus@zerobi.au` (skip solo blocks / focus time)
+- Must NOT have a Sent message already labelled `Meeting-Prep/<event-id>` — that means it's already been briefed (see step 4)
 
-If no matching event → exit silently. Do not send an email.
+If no matching events → exit silently. Send nothing.
+
+If multiple matching events → process each, send one brief per event.
 
 ### 2. Gather attendee context
 

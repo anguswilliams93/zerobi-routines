@@ -9,7 +9,7 @@ Each `.md` file under `prompts/` is the prompt body for one routine.
 | File | Routine | Schedule |
 |---|---|---|
 | `prompts/daily-routine.md` | Daily morning routine + email triage | 7am AEST daily (21:00 UTC prev day) |
-| `prompts/meeting-prep.md` | Per-meeting prep brief (75min lookahead) | hourly during Brisbane business hours |
+| `prompts/meeting-prep.md` | Per-meeting prep brief (now → tomorrow 6pm lookahead, dedupe via Sent label) | 7am + 4pm Brisbane daily |
 
 ## Update flow
 
