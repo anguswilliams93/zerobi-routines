@@ -51,5 +51,5 @@ Monday's daily routine reads this thread and reconciles against the draft Perigo
 
 - Send exactly one email per run.
 - Subject must include `Timesheet: week ending <YYYY-MM-DD>` exactly — Monday's reconciliation greps on this.
-- Never send if today is not a Friday in Brisbane time (cron should already enforce, but double-check via `date +%u` in bash — `5` = Friday).
+- `week_ending` = today if today is Friday Brisbane; otherwise next-coming Friday (lets manual test runs still send a sensibly-dated email).
 - Australian English. No emojis in body.
