@@ -71,11 +71,13 @@ For each action item surfaced (overdue bill, invoice chase, ATO obligation, etc.
 
 **Only run this step if today (Brisbane) is Monday.** Skip silently otherwise.
 
-1. Find the most recent reply to last Friday's timesheet email:
-   - `mcp__zapier__gmail_find_email` with query `subject:"Timesheet: week ending" from:angus@zerobi.au` (limit 5, newest first).
-   - Get the most recent thread. Read replies. Find the latest reply FROM angus@zerobi.au (not the original autosent message).
-   - Parse the first non-empty line as a number (the day count). Capture any optional note from the second line.
-   - If no reply found, or reply unparseable → note "No timesheet reply for week ending <date>" in briefing actions. Skip the rest of this step.
+1. Find Angus's timesheet response (a completed Google Task):
+   - `mcp__zapier__google_tasks_get_tasks_by_list` for "My Tasks" with `show_completed=true`.
+   - Filter to tasks where `notes` contains `[zerobi-timesheet]` AND completed within the last 4 days.
+   - Pick the most recent. Extract `week_ending=<YYYY-MM-DD>` from notes.
+   - Parse the task TITLE as a number. Strip whitespace. Accept integers and decimals (e.g. `4`, `4.5`).
+   - If no matching completed task → note `No Perigon timesheet response from Angus for week ending <date>` in briefing actions. Skip the rest of this step.
+   - If title is unparseable (still has the original `Perigon timesheet — week ending …` text, or contains non-numeric text) → flag `Perigon timesheet task completed but title not retitled to a number — week ending <date>` in briefing. Skip the rest.
 
 2. Pull current Perigon Group draft invoice from Xero:
    - `mcp__claude_ai_Xero__get_contacts_and_receivables` — find Perigon Group's most recent invoice.

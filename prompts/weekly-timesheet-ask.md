@@ -1,6 +1,6 @@
 # Weekly timesheet ask — Friday 4pm
 
-Sends Angus a structured self-email asking how many days he worked this week, billable to Perigon Group. Monday's daily routine reads the reply and reconciles it against the current draft invoice.
+Creates a Google Task asking Angus how many days he worked this week, billable to Perigon Group. Angus retitles the task to a number and ticks complete. Monday's daily routine reads completed tasks tagged `[zerobi-timesheet]` and reconciles against the draft Perigon invoice.
 
 You run in a remote sandbox.
 
@@ -8,7 +8,8 @@ You run in a remote sandbox.
 
 ## Tools
 
-- `mcp__zapier__gmail_send_email`
+- `mcp__zapier__google_tasks_create_task`
+- `mcp__zapier__google_tasks_find_task` (idempotency check)
 
 ---
 
@@ -16,40 +17,40 @@ You run in a remote sandbox.
 
 ### 1. Compute date range
 
-- `week_ending` = today's date (Friday Brisbane)
-- `week_starting` = today − 4 days (Monday Brisbane)
+- `week_ending` = today if today is Friday Brisbane; otherwise next-coming Friday (lets manual test runs still create a sensibly-dated task).
+- `week_starting` = `week_ending` − 4 days
 - Format both as `YYYY-MM-DD`
 
-### 2. Send the ask
+### 2. Idempotency check
 
-`mcp__zapier__gmail_send_email`:
-- To: `angus@zerobi.au`
-- From: `angus@zerobi.au`
-- Subject: `Timesheet: week ending <YYYY-MM-DD> — how many days?`
-- Body (plain text):
+`mcp__zapier__google_tasks_find_task` — search "My Tasks" for any OPEN task with title containing `Perigon timesheet — week ending <week_ending>`. If one exists, exit silently — don't duplicate.
+
+### 3. Create the task
+
+`mcp__zapier__google_tasks_create_task`:
+- task_list: `My Tasks`
+- title: `Perigon timesheet — week ending <YYYY-MM-DD> — days worked?`
+- due: `<week_ending>T17:00:00+10:00`
+- notes:
 
 ```
-Week: <week_starting> → <week_ending>
+[zerobi-timesheet] week_ending=<YYYY-MM-DD> week_starting=<YYYY-MM-DD>
 
-How many days did you work for Perigon Group this week?
+How to respond:
+1. Edit this task's TITLE to just the number of days you worked for Perigon this week.
+   Examples: "4", "4.5", "0"
+2. Tick the task complete.
 
-REPLY WITH JUST A NUMBER on the first line of your reply. Examples:
-  5
-  4.5
-  0
+Monday's daily routine reads completed tasks tagged [zerobi-timesheet] and updates the draft Perigon invoice in Xero accordingly.
 
-Optional second line: a note (e.g. "took Thu off" or "half day Fri").
-
-Monday's daily routine reads this thread and reconciles against the draft Perigon invoice in Xero.
-
-— autosent by Friday timesheet routine
+— autocreated by Friday timesheet routine
 ```
 
 ---
 
 ## Rules
 
-- Send exactly one email per run.
-- Subject must include `Timesheet: week ending <YYYY-MM-DD>` exactly — Monday's reconciliation greps on this.
-- `week_ending` = today if today is Friday Brisbane; otherwise next-coming Friday (lets manual test runs still send a sensibly-dated email).
-- Australian English. No emojis in body.
+- One task per week. Idempotency check before create.
+- The `[zerobi-timesheet]` marker in notes is load-bearing — Monday's routine greps on this. Never remove or rename.
+- The `week_ending=<YYYY-MM-DD>` line in notes is the binding to a specific week. Required.
+- Australian English. No emojis.
