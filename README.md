@@ -1,8 +1,11 @@
 # zerobi-routines
 
-Source-of-truth prompts for Anthropic remote Claude Code routines (claude.ai/code/routines).
+Two things live here:
 
-Each `.md` file under `prompts/` is the prompt body for one routine.
+1. **`prompts/`** — source-of-truth prompt bodies for Anthropic remote Claude Code routines (claude.ai/code/routines). Each `.md` is one routine.
+2. **`dashboard/`** — local Next.js dashboard (`weekly-digest`) that reads JSON from `dashboard/raw/`. The daily routine writes into `dashboard/raw/` via `git clone → write → commit → push` on this same repo; a local `git pull` refreshes the dashboard. See `dashboard/lib/schema.ts` for the canonical payload shapes.
+
+Co-located so the routine's writer (Step 5 of `daily-routine.md`) and the dashboard's reader (`dashboard/lib/raw.ts`) share one git-tracked source of truth for both schema and data.
 
 ## Routines
 

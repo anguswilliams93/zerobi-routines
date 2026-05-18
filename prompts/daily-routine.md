@@ -354,30 +354,37 @@ These two sections are non-negotiable transparency — never drop them, even whe
 
 ### 5. Update dashboard raw store
 
-Final step. Reuse the data already pulled — no new MCP fetches. Write JSON payloads to the `zerobi-dashboard-raw/` Google Drive folder so the local dashboard sync (`zerobi/dashboard/raw/`) ingests them on next refresh.
+Reuse the data already pulled — no new MCP fetches. Write JSON files into the **same** `zerobi-routines` git repo (this repo) under `dashboard/raw/`, then commit and push. The local dashboard reads `dashboard/raw/*.json` directly; a `git pull` on Angus's machine refreshes it.
 
-**Transport:** Zapier Google Drive. For each file below:
+**Transport: git** (same pattern this routine already uses to read its own prompts).
 
-1. `mcp__zapier__google_drive_find_a_file` in folder `zerobi-dashboard-raw/<subpath>` by name (e.g. `calendar.json` inside `zerobi-dashboard-raw/daily/`).
-2. If found → `mcp__zapier__google_drive_replace_file` with new content, MIME `application/json`.
-3. If not found → `mcp__zapier__google_drive_create_file_from_text` in the same folder, same name, MIME `application/json`.
+```bash
+git clone --depth 1 https://github.com/anguswilliams93/zerobi-routines.git /tmp/repo
+cd /tmp/repo
+# … write the JSON files below into dashboard/raw/ …
+git -c user.name="zerobi-routine" -c user.email="angus@zerobi.au" add dashboard/raw
+git -c user.name="zerobi-routine" -c user.email="angus@zerobi.au" commit -m "data: daily run <YYYY-MM-DD HH:MM AEST>"
+git push origin HEAD:main
+```
 
-If the folder doesn't exist or Drive errors → note `Dashboard sync failed — <reason>` under `Done this run` in the briefing (don't re-send the email; just log). Never block the run on this step.
+Push auth uses the routine's existing GitHub credentials (same secret the bootstrap already uses to clone prompts). If clone or push fails → note `Dashboard sync failed — <reason>` under `Done this run` in the briefing. Never block the run on this step.
 
-**Schema:** payloads must validate against `zerobi/dashboard/lib/schema.ts`. Every file gets a `_meta` envelope `{ fetched_at, source, ok, note? }`. `fetched_at` = ISO 8601 with Brisbane offset, recorded at fetch time in step 1 (not write time).
+**Commit hygiene:** one commit per run, subject `data: daily run <YYYY-MM-DD HH:MM AEST>`, no body. All `dashboard/raw/*.json` changes in that single commit — never one-file-per-commit. If `git status` shows no diff after writing (data identical to what's already in `main`), skip the commit and push silently — log `Dashboard unchanged — no commit` in briefing.
+
+**Schema:** payloads must validate against `dashboard/lib/schema.ts` in this repo. Every file gets a `_meta` envelope `{ fetched_at, source, ok, note? }`. `fetched_at` = ISO 8601 with Brisbane offset, recorded at fetch time in step 1 (not write time).
 
 **Files to write** (only the ones the routine has data for — skip the rest, the weekly scheduler owns them):
 
 ```
-daily/calendar.json       ← step 1 Calendar events
+dashboard/raw/daily/calendar.json       ← step 1 Calendar events
 { "_meta": {...}, "events": [{ id, start, end?, title, attendees[], location?, link?, all_day }] }
 
-daily/actions.json        ← every Google Task created this run (kind="task")
-                            + flagged-for-close items (kind="task", detail prefixed "FLAG: ")
-                            + drafts queued (kind="draft", title = recipient + subject)
+dashboard/raw/daily/actions.json        ← every Google Task created this run (kind="task")
+                                          + flagged-for-close items (kind="task", detail prefixed "FLAG: ")
+                                          + drafts queued (kind="draft", title = recipient + subject)
 { "_meta": {...}, "actions": [{ kind, title, detail?, created_at }] }
 
-financial/cash.json       ← Redbark Business balances (sum) + Xero AR/AP from step 1
+dashboard/raw/financial/cash.json       ← Redbark Business balances (sum) + Xero AR/AP from step 1
 { "_meta": {...}, "cash_at_bank": <sum Business account balances>,
   "receivables": <sum AUTHORISED Xero invoices>,
   "payables": <sum DRAFT+AUTHORISED bills if pulled, else 0>,
@@ -385,30 +392,31 @@ financial/cash.json       ← Redbark Business balances (sum) + Xero AR/AP from 
   "status": "healthy" | "tight" | "critical" }
   Status thresholds: critical if cash < 5000, tight if cash < 15000, else healthy.
 
-financial/receivables.json ← AUTHORISED Xero invoices from step 1
+dashboard/raw/financial/receivables.json ← AUTHORISED Xero invoices from step 1
 { "_meta": {...},
   "items": [{ contact, amount, due_date?, days_overdue }],
   "total": <sum amount> }
   days_overdue: 0 if not yet due, else (today − due_date) in days.
 
-meta.json                 ← rewrite the whole file; merge — preserve other sources you didn't touch
+dashboard/raw/meta.json                 ← merge — preserve sources you didn't touch
 { "generated_at": <now ISO Brisbane>,
   "week": <ISO week number>,
   "fy": "FY<YY>" (Australian FY: July–June; e.g. May 2026 → FY26),
   "sources": { "<relpath>": { fetched_at, source, ok, note? }, ... } }
-  For each file you wrote, add/overwrite a sources entry keyed by relative path.
+  Read existing meta.json first. For each file you wrote, add/overwrite its sources entry keyed by the path relative to dashboard/raw/ (e.g. "daily/calendar.json"). Leave other sources entries untouched.
   Source strings to use (match existing convention):
-    daily/calendar.json       → "zapier_google_calendar_find_events"
-    daily/actions.json        → "daily-routine"
-    financial/cash.json       → "redbark + claude_ai_Xero__find_invoice"
+    daily/calendar.json        → "zapier_google_calendar_find_events"
+    daily/actions.json         → "daily-routine"
+    financial/cash.json        → "redbark + claude_ai_Xero__find_invoice"
     financial/receivables.json → "claude_ai_Xero__find_invoice"
-  If Redbark was unavailable in step 1, still write `financial/cash.json` with `_meta.ok = false`, `_meta.note = "redbark unavailable"`, and omit numeric fields you can't fill (use 0; mark status="tight" as a safe default). Same pattern for any other source failure — `ok=false` + note, never silently lie.
+  If Redbark was unavailable in step 1, still write financial/cash.json with _meta.ok = false, _meta.note = "redbark unavailable", and use 0 for fields you can't fill (status="tight" as safe default). Same pattern for any other source failure — ok=false + note, never silently lie.
+```
 
-**Skip these files entirely** — the weekly scheduler populates them and overwriting with partial data corrupts the dashboard: `daily/unread.json`, `daily/invoices.json`, `daily/gmail-drafts.json`, `weekly/*`, `financial/pl.json`, `financial/balance-sheet.json`, `financial/customers.json`, `financial/bank-spend.json`, `deadlines.json`.
+**Skip these paths entirely** — the weekly scheduler populates them and overwriting with partial data corrupts the dashboard: `daily/unread.json`, `daily/invoices.json`, `daily/gmail-drafts.json`, `weekly/*`, `financial/pl.json`, `financial/balance-sheet.json`, `financial/customers.json`, `financial/bank-spend.json`, `deadlines.json`, `actions/queue.json` (queue is dashboard-write-only — UI mutates it via server actions; routine must never touch it).
 
-**Idempotency:** every file is a full overwrite, not append. Running the routine twice in one day is safe — second run wins.
+**Idempotency:** every file is a full overwrite, not append. Running the routine twice in one day is safe — second run wins. The commit-skip-on-no-diff rule above keeps history clean when nothing changed.
 
-Add a single bullet to `Done this run` in the briefing: `Updated dashboard — N files written (calendar, actions, cash, receivables, meta)` or `Dashboard sync failed — <reason>`. Do this BEFORE step 4 sends the email so the briefing reflects step 5's outcome — i.e. swap the actual ordering to: pull (1) → triage (1b/1c) → reconcile (2/2b/2c) → render briefing draft (3) → write dashboard (5) → finalise briefing with step-5 bullet → send (4).
+Add a single bullet to `Done this run` in the briefing: `Updated dashboard — N files written, pushed <commit-sha>` / `Dashboard unchanged — no commit` / `Dashboard sync failed — <reason>`. Do this BEFORE step 4 sends the email so the briefing reflects step 5's outcome — i.e. swap the actual ordering to: pull (1) → triage (1b/1c) → reconcile (2/2b/2c) → render briefing draft (3) → write dashboard + push (5) → finalise briefing with step-5 bullet → send (4).
 
 ---
 
