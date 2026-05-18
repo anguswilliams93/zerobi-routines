@@ -381,6 +381,101 @@ body {
   font-weight: 500;
 }
 
+/* ─── login page ─── */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--bg);
+  position: relative;
+}
+.login-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+.login-card {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 36px 32px 32px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+}
+.login-brand {
+  display: block;
+  width: 140px;
+  aspect-ratio: 782 / 142;
+  background-color: var(--ink);
+  -webkit-mask: url(/zerobi-banner.svg) no-repeat left center / contain;
+          mask: url(/zerobi-banner.svg) no-repeat left center / contain;
+  margin-bottom: 4px;
+}
+.dark .login-brand { background-color: #b5ff6d; }
+.login-eyebrow {
+  font-family: var(--font-geist-mono), 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.login-title {
+  font-family: var(--font-geist), 'Manrope', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 6px;
+  line-height: 1.1;
+}
+.login-input {
+  font-family: var(--font-geist), 'Manrope', sans-serif;
+  font-size: 15px;
+  padding: 12px 14px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  color: var(--ink);
+  outline: none;
+  border-radius: 4px;
+  transition: border-color 0.15s ease;
+}
+.login-input::placeholder { color: var(--ink-4); }
+.login-input:focus { border-color: var(--ink); }
+.login-btn {
+  font-family: var(--font-geist), 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.login-btn:hover { background: var(--ink-2); }
+.dark .login-btn { color: var(--surface); }
+.login-err {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--c-terracotta);
+  margin: -4px 0 0;
+}
+
 /* ─── cards (sharp corners, ink-on-lime) ─── */
 .zb-card {
   background: var(--surface);
