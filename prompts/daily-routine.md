@@ -9,9 +9,9 @@ You run in a remote sandbox — **no access to local files**. All state lives in
 ## Tools
 
 - **Google Calendar / Tasks / Sheets / Drive** → `mcp__zapier__google_*`
-- **Outlook inbox** → `mcp__claude_ai_ms365__outlook_email_search`
+- **Gmail inbox** → `mcp__zapier__gmail_find_email` (query `in:inbox is:unread`)
 - **Xero** → `mcp__claude_ai_Xero__*` (read-only — get_cash_position, get_contacts_and_receivables)
-- **Email send/draft** → drafts only, never send (use `mcp__zapier__gmail_create_draft` if needed; but primary delivery is self-email at end)
+- **Email send** → `mcp__zapier__gmail_send_email` (self-email only — to angus@zerobi.au, from angus@zerobi.au). Drafts via `mcp__zapier__gmail_create_draft` for replies if needed.
 
 ---
 
@@ -20,7 +20,7 @@ You run in a remote sandbox — **no access to local files**. All state lives in
 ### 1. Pull live state (parallel)
 
 - Google Calendar events today (Brisbane time)
-- Outlook unread since yesterday
+- Gmail unread since yesterday (`in:inbox is:unread`)
 - Xero cash position + receivables
 - Google Tasks: list ALL open tasks in "My Tasks", `show_completed=false`
 - Google Tasks: list completed tasks in last 24h (`show_completed=true`) — to detect ticked-off items
@@ -67,9 +67,9 @@ Bottom line: <1 sentence with $ amounts and overdue flags>
 
 ### 4. Send self-email
 
-- `mcp__zapier__gmail_create_draft` is OFF-limits for delivery — Gmail is not the inbox in use.
-- Use Outlook delivery if available; otherwise output the briefing in the routine's run log only (visible at claude.ai/code/routines run history).
+- `mcp__zapier__gmail_send_email` to angus@zerobi.au from angus@zerobi.au.
 - Subject: `Daily briefing — YYYY-MM-DD`
+- Body: the briefing from step 3.
 
 ---
 
@@ -82,4 +82,4 @@ Bottom line: <1 sentence with $ amounts and overdue flags>
 
 ## Context
 
-Sole-director consulting company in Australia. Tax agent handles all definitive tax advice. Use Xero as financial source of truth (Zapier MCP). Email is Outlook (ms365 MCP). Tasks are Google Tasks (Zapier MCP). All pricing in AUD.
+Sole-director consulting company in Australia. Tax agent handles all definitive tax advice. Use Xero as financial source of truth (claude.ai Xero MCP). Email is Gmail (Zapier MCP). Tasks are Google Tasks (Zapier MCP). All pricing in AUD.
