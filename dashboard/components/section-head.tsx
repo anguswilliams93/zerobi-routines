@@ -16,12 +16,15 @@ export function SectionHead({
 }) {
   return (
     <header className="sec-hdr">
-      <div>
-        {source && <div className="src">{source}</div>}
-        <h2>
-          {title}
-          {italic && <> <span className="it">{italic}</span></>}
-        </h2>
+      <div className="sec-hdr-main">
+        <span className="sec-icon" aria-hidden="true" />
+        <div>
+          {source && <div className="src">{source}</div>}
+          <h2>
+            {title}
+            {italic && <> <span className="it">{italic}</span></>}
+          </h2>
+        </div>
       </div>
       {note && <div className="note">{note}</div>}
     </header>

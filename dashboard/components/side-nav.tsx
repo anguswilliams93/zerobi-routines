@@ -10,7 +10,7 @@ const LINKS = [
 export function SideNav({ live = true }: { live?: boolean }) {
   return (
     <nav className="nav" aria-label="Sections">
-      <div className="nav-brand">Zerobi</div>
+      <span className="nav-brand" role="img" aria-label="Zerobi" />
       <div className="nav-meta">
         <span className="dot" />
         {live ? "Live" : "Stale"}

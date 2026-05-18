@@ -205,15 +205,17 @@ body {
   animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 .nav-brand {
-  font-family: var(--font-geist), 'Manrope', sans-serif;
-  font-size: 20px;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  margin-bottom: 4px;
+  display: block;
+  width: 100%;
+  max-width: 160px;
+  /* preserve 782:142 banner aspect ratio */
+  aspect-ratio: 782 / 142;
+  margin-bottom: 6px;
+  background-color: var(--ink);
+  -webkit-mask: url(/zerobi-banner.svg) no-repeat left center / contain;
+          mask: url(/zerobi-banner.svg) no-repeat left center / contain;
 }
-.nav-brand .it { color: inherit; font-style: normal; }
+.dark .nav-brand { background-color: #b5ff6d; }
 .nav-meta {
   font-family: var(--font-geist-mono), 'JetBrains Mono', monospace;
   font-size: 10px;
@@ -340,6 +342,21 @@ body {
   gap: 16px;
   flex-wrap: wrap;
 }
+.sec-hdr-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sec-icon {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  background-color: var(--ink);
+  -webkit-mask: url(/zerobi-icon.svg) no-repeat center / contain;
+          mask: url(/zerobi-icon.svg) no-repeat center / contain;
+}
+.dark .sec-icon { background-color: #b5ff6d; }
 .sec-hdr .src {
   font-family: var(--font-geist-mono), monospace;
   font-size: 10px;
