@@ -25,6 +25,34 @@ You run in a remote sandbox — **no access to local files**. All state lives in
 - Google Tasks: list ALL open tasks in "My Tasks", `show_completed=false`
 - Google Tasks: list completed tasks in last 24h (`show_completed=true`) — to detect ticked-off items
 
+### 1b. Triage Gmail inbox
+
+For every unread email pulled in step 1:
+
+**Categorise** into one of:
+- `Triage/Marketing` — bulk sender, unsubscribe link, no-reply, promotional keywords
+- `Triage/Junk` — spam / unsolicited bulk
+- `Triage/Action-Question` — real person asking a direct question or for a decision
+- `Triage/Action-Other` — real person, FYI with implicit follow-up
+- `Triage/Reference` — important context, no action
+
+**Apply labels** via `mcp__zapier__gmail_add_label_to_email`:
+- One primary triage label per email (from the closed set above — never invent new triage labels).
+- One topical label inferred from sender + subject. Reuse existing labels where they fit (`Customers/Perigon`, `Customers/Splatt`, `Tax/ATO`, `Tax/ThompsonPartners`, `BlockScore`, `NativeSchema`, `Banking`, `Software/Subscriptions`, `Personal`, etc.).
+- If no existing topical label fits, create via `mcp__zapier__gmail_create_label`. Naming: PascalCase, slash-separated, max 2 levels, singular nouns, no emoji. Add to in-memory map so subsequent emails reuse.
+- Treat Gmail system labels (`INBOX`, `STARRED`, `IMPORTANT`, `CATEGORY_*`) as read-only.
+
+**Archive** Marketing + Junk only via `mcp__zapier__gmail_archive_email` (removes `INBOX`, keeps applied labels). NEVER archive Action-* or Reference. NEVER delete.
+
+**Draft replies** for every `Triage/Action-Question` via `mcp__zapier__gmail_create_draft_reply`:
+- Acknowledge briefly.
+- Provide Angus's likely answer (best inference — he'll edit before sending).
+- Australian English. Direct. No "Sure!" / "Of course" / "Happy to".
+- Sign off `Cheers,\nAngus`.
+- Track each draft (recipient, subject, question summary) for the briefing.
+
+If unread fetch fails: skip triage + archive + draft. Note failure in briefing. Don't block the rest of the run.
+
 ### 2. Reconcile actions vs existing tasks
 
 For each action item surfaced (overdue bill, invoice chase, ATO obligation, etc.):
@@ -49,8 +77,11 @@ Bottom line: <1 sentence with $ amounts and overdue flags>
 ## Calendar
 - <events or "empty">
 
-## Inbox
-- <unread highlights — sender, subject — or "no new mail">
+## Inbox triage
+- N unread total → M action / K reference / J archived (marketing+junk)
+- Drafts awaiting review:
+  - [Sender] — "[Subject]" — Q: [question summary]
+- New labels created this run: [list]
 
 ## Xero
 | Cash | $X |
