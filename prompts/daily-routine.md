@@ -11,6 +11,7 @@ You run in a remote sandbox — **no access to local files**. All state lives in
 - **Google Calendar / Tasks / Sheets / Drive** → `mcp__Zapier__google_*`
 - **Gmail inbox** → `mcp__Zapier__gmail_find_email` (query `in:inbox is:unread`)
 - **Xero** → `mcp__Zapier__xero_find_invoice`, `mcp__Zapier__xero_find_contact` (native Zapier actions only — no raw API requests)
+- **Banks (Redbark)** → `mcp__claude_ai_Redbark__list_accounts`, `mcp__claude_ai_Redbark__list_balances`, `mcp__claude_ai_Redbark__list_transactions`. Covers both Business and Personal connections.
 - **Email send** → `mcp__Zapier__gmail_send_email` (self-email only — to angus@zerobi.au, from angus@zerobi.au). Drafts via `mcp__Zapier__gmail_create_draft_reply` for replies if needed.
 
 ---
@@ -24,6 +25,15 @@ You run in a remote sandbox — **no access to local files**. All state lives in
 - Xero receivables: `mcp__Zapier__xero_find_invoice` — search for recent AUTHORISED invoices for key contacts (Perigon Group, others known from tasks)
 - Google Tasks: list ALL open tasks in "My Tasks", `show_completed=false`
 - Google Tasks: list ALL tasks including completed (`show_completed=true`) — used as the deduplication source; keep the full list in memory for the entire run
+- Redbark: `mcp__claude_ai_Redbark__list_accounts` to enumerate connections, then `mcp__claude_ai_Redbark__list_balances` (all accounts) and `mcp__claude_ai_Redbark__list_transactions` (last 3 days, all accounts). Tag each account as Business or Personal based on the connection/account name. If Redbark errors → note failure in briefing, skip cash + payment-match steps, continue.
+
+### 1c. Match recent bank credits → Xero invoices
+
+For each credit transaction on a Business account in the last 3 days:
+- Match against AUTHORISED Xero invoices pulled in step 1 by: amount equal, payer name overlapping invoice contact name, date within 5 business days of invoice issue.
+- For each match: add to briefing `<Contact> paid INV-XXXX $X,XXX on DD Mon [done]`. If the invoice is still AUTHORISED in Xero (i.e. Xero hasn't marked it paid), also create a Google Task `Mark INV-XXXX paid in Xero — $X,XXX received DD Mon`.
+- Unmatched credits >$200 → list as `Unmatched credit: $X,XXX from <payer> DD Mon — reconcile manually` under ACTIONS `[new]`.
+- Sub-$200, recurring, or transfer-looking credits (interest, refunds, internal transfers) → ignore silently.
 
 ### 1b. Triage Gmail inbox
 
@@ -71,13 +81,49 @@ Search both the open-tasks list AND the completed-tasks list (both fetched in st
 - NEVER recreate a task that already exists open.
 - NEVER recreate a task the user has already completed — check the completed list every time before calling create.
 
-### 2b. Monday-only: reconcile Perigon timesheet
+### 2c. Wednesday-only: business/personal bleed check
 
-**Only run this step if today (Brisbane) is Monday.** Skip silently otherwise.
+**Only run this step if today (Brisbane) is Wednesday.** Skip silently otherwise.
+
+Sole-director leak detector. Scans last 7 days of bank transactions for cross-pollination between Business and Personal accounts.
+
+1. `mcp__claude_ai_Redbark__list_transactions` last 7 days on all accounts (already pulled if step 1 cache covers it; otherwise refetch).
+
+2. On **Business accounts**, flag debits where the merchant/description strongly suggests personal spend:
+   - Groceries (Coles, Woolworths, Aldi, IGA — unless tagged as office snacks)
+   - Personal subscriptions (Netflix, Spotify, Apple Music, Disney+, gym, dating apps)
+   - Restaurants/cafes outside business hours or with no calendar-event match that day
+   - Personal travel (consumer airline tickets without a client calendar event)
+
+3. On **Personal accounts**, flag debits that look like business spend:
+   - SaaS / dev tools (Anthropic, OpenAI, GitHub, AWS, GCP, Vercel, Cloudflare, JetBrains, Linear, Notion paid, Figma)
+   - Domain / hosting providers
+   - Business books, courses, conference tickets
+
+4. Output to briefing under a `BLEED CHECK (Wednesday)` section:
+   ```
+   BLEED CHECK (Wednesday)
+   Business → personal: <list as "DD Mon  $X  <merchant>  <suspected personal reason>">
+   Personal → business: <list as "DD Mon  $X  <merchant>  <suspected business reason>">
+   <or "Clean — no obvious cross-pollination this week">
+   ```
+
+5. For any flagged item > $50, create a Google Task `Bleed check: <merchant> $X on DD Mon — reimburse / recode?` due Friday. Idempotency: skip if existing open task contains the same merchant + date.
+
+**Hard rules:**
+- Flag, never auto-recode. Angus decides direction (reimburse, journal, leave).
+- Be conservative — false positives waste attention. When in doubt, skip.
+- If Redbark fetch failed in step 1, skip silently and note `Bleed check skipped — Redbark unavailable` in briefing.
+
+### 2b. Friday-only: reconcile Perigon timesheet
+
+**Only run this step if today (Brisbane) is Friday.** Skip silently otherwise.
+
+Reconciles the response to LAST Friday's 4pm ask (created ~7 days ago, completed by Angus sometime that weekend or week).
 
 1. Find Angus's timesheet response (a completed Google Task):
    - `mcp__zapier__google_tasks_get_tasks_by_list` for "My Tasks" with `show_completed=true`.
-   - Filter to tasks where `notes` contains `[zerobi-timesheet]` AND completed within the last 4 days.
+   - Filter to tasks where `notes` contains `[zerobi-timesheet]` AND completed within the last 8 days.
    - Pick the most recent. Extract `week_ending=<YYYY-MM-DD>` from notes.
    - Parse the task TITLE as a number. Strip whitespace. Accept integers and decimals (e.g. `4`, `4.5`).
    - If no matching completed task → note `No Perigon timesheet response from Angus for week ending <date>` in briefing actions. Skip the rest of this step.
@@ -124,6 +170,12 @@ Daily briefing — YYYY-MM-DD
 
 <1-sentence bottom line: lead with $ amounts and any overdue flags>
 
+CASH
+Business:  <Account name>  $X,XXX.XX
+           <Account name>  $X,XXX.XX
+Personal:  <Account name>  $X,XXX.XX
+<or "Redbark unavailable — bank balances skipped">
+
 CALENDAR
 <list events as "HH:MM — Event title (location)" or "Nothing scheduled">
 
@@ -134,8 +186,15 @@ Drafts queued:
 <or "Nothing to triage" if empty>
 
 MONEY
-<list each invoice as "INV-XXXX  Perigon Group  $X,XXX  due DD Mon  [AUTHORISED/DRAFT]">
-<or "No outstanding invoices found">
+Outstanding:
+  <list each invoice as "INV-XXXX  Perigon Group  $X,XXX  due DD Mon  [AUTHORISED/DRAFT]">
+  <or "No outstanding invoices found">
+Paid (last 3 days):
+  <list each matched credit as "INV-XXXX  Contact  $X,XXX  paid DD Mon">
+  <or "No new payments matched">
+Unmatched credits:
+  <list as "DD Mon  $X,XXX  from <payer>"  or "None">
+
 
 ACTIONS
   1. <action>  $<amount>  [new/tracked/done/flag-for-close]
@@ -155,7 +214,7 @@ ACTIONS
 - Australian English, $-led, no hedging
 - Lead with the punchline (bottom-line first)
 - Cite invoice #, $, due date — not generic phrasing
-- Xero is source of truth over any other snapshot for $ amounts
+- Xero is source of truth for invoiced amounts. Redbark (bank) is source of truth for cleared cash. When they disagree on a payment, the bank wins — flag the Xero update as an action.
 
 ## Context
 

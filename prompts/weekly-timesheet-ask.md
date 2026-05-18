@@ -1,6 +1,6 @@
 # Weekly timesheet ask — Friday 4pm
 
-Creates a Google Task asking Angus how many days he worked this week, billable to Perigon Group. Angus retitles the task to a number and ticks complete. Monday's daily routine reads completed tasks tagged `[zerobi-timesheet]` and reconciles against the draft Perigon invoice.
+Creates a Google Task asking Angus how many days he worked this week, billable to Perigon Group. Angus retitles the task to a number and ticks complete. The following Friday's daily routine reads completed tasks tagged `[zerobi-timesheet]` and reconciles against the draft Perigon invoice.
 
 You run in a remote sandbox.
 
@@ -41,7 +41,7 @@ How to respond:
    Examples: "4", "4.5", "0"
 2. Tick the task complete.
 
-Monday's daily routine reads completed tasks tagged [zerobi-timesheet] and updates the draft Perigon invoice in Xero accordingly.
+The following Friday's daily routine reads completed tasks tagged [zerobi-timesheet] and updates the draft Perigon invoice in Xero accordingly.
 
 — autocreated by Friday timesheet routine
 ```
