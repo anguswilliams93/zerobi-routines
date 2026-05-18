@@ -23,7 +23,7 @@ You run in a remote sandbox — **no access to local files**. All state lives in
 - Gmail unread since yesterday (`in:inbox is:unread`)
 - Xero receivables: `mcp__Zapier__xero_find_invoice` — search for recent AUTHORISED invoices for key contacts (Perigon Group, others known from tasks)
 - Google Tasks: list ALL open tasks in "My Tasks", `show_completed=false`
-- Google Tasks: list completed tasks in last 24h (`show_completed=true`) — to detect ticked-off items
+- Google Tasks: list ALL tasks including completed (`show_completed=true`) — used as the deduplication source; keep the full list in memory for the entire run
 
 ### 1b. Triage Gmail inbox
 
@@ -57,15 +57,16 @@ If unread fetch fails: skip triage + archive + draft. Note failure in briefing. 
 
 For each action item surfaced (overdue bill, invoice chase, ATO obligation, etc.):
 
-- Match against open Google Tasks by keyword (invoice #, vendor name, "ATO", etc.)
+Search both the open-tasks list AND the completed-tasks list (both fetched in step 1) by keyword (invoice #, vendor name, "ATO", etc.) before deciding what to do:
+
 - If task EXISTS and still open → leave it. Note `[tracked]` in briefing.
-- If task was COMPLETED since last run → mark action as `[done since last run]`. Do NOT recreate.
-- If task MISSING and action still needed → create new Google Task with due date + notes. Mark `[new]`.
+- If a COMPLETED task matches (regardless of when it was completed) → mark action as `[done]`. Do NOT recreate.
+- If NO match in either list and action still needed → create new Google Task with due date + notes. Mark `[new]`.
 - If action no longer applies (e.g. invoice now paid per Xero) and an open task exists → mark `[flag-for-close]`. Do NOT auto-close — let Angus tick it off.
 
 **Hard rules:**
 - NEVER recreate a task that already exists open.
-- NEVER recreate a task user has completed.
+- NEVER recreate a task the user has already completed — check the completed list every time before calling create.
 
 ### 2b. Monday-only: reconcile Perigon timesheet
 
