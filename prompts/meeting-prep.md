@@ -35,12 +35,15 @@ If multiple matching events → process each, send one brief per event.
 
 ### 2. Gather attendee context
 
-For each external attendee:
+For each meeting, issue ONE combined gmail query covering all external attendees:
 
-- `mcp__zapier__gmail_find_email` with query `from:<attendee-email> OR to:<attendee-email>`, limit 5, sorted newest first. Extract subject + date + 1-line summary.
-- Note any explicit asks, open questions, or commitments from those threads.
+- `mcp__zapier__gmail_find_email` with query `(from:(a@x.com OR b@y.com OR ...) OR to:(a@x.com OR b@y.com OR ...))`, limit 8, sorted newest first.
+- Extract subject + date + sender + 1-line summary per result.
+- Note any explicit asks, open questions, or commitments.
 
 Also pull the event's own description / location / agenda field if present.
+
+**Skip if recently briefed for same attendee-set.** Before composing, check Sent for any `Meeting-Prep/*` label applied in the last 24h whose subject mentions the same external attendee email. If found, skip — Angus already has fresh context on this person.
 
 ### 3. Compose brief
 
