@@ -164,104 +164,184 @@ Reconciles the response to LAST Friday's 4pm ask (created ~7 days ago, completed
 - Always leave a `xero_add_note_to_invoice` audit trail naming the routine.
 - If `mcp__zapier__xero_find_invoice` returns no draft Perigon invoice at all → add to briefing `No draft Perigon invoice found for week ending <date>. Create one manually. [new]` and skip.
 
-**Email format:** HTML. Use the template below. Inline CSS only (Gmail strips `<style>`). Tables for layout (most reliable across clients). Keep mobile-readable — max-width 600px, no horizontal scroll.
+**Email format:** HTML. Use the template below — Zerobi brand tokens from `zerobi-web/app/globals.css`. Inline CSS only (Gmail strips `<style>`). Tables for layout. Max-width 600px. **No borders, no rounded corners** — sections separated by vertical whitespace + the terracotta-dot eyebrow only.
 
-Empty sections collapse to a single muted line (e.g. `<p class="empty">No outstanding invoices</p>`). Don't render empty bullet lists or scaffolding placeholders.
+Geist is the brand font but won't load in email clients — chain falls back to Manrope → system. Body weight 500, letter-spacing −0.02em (per brand). Headings 700, letter-spacing −0.03em.
+
+Brand tokens used:
+- `#b1e852` lime — outer page bleed only (keeps brand peek in inbox preview without flooding the read pane)
+- `#faf9f5` paper — card fill (warm off-white, easy on the eyes for a daily read)
+- `#1e1e1a` ink — primary text
+- `#50504a` ink-3 — muted/eyebrow text
+- `#6c6c64` ink-4 — secondary muted
+- `#d97757` terracotta — accent dot + warning/unmatched indicator
+
+Empty sections collapse to a single muted ink-3 line. Don't render empty bullet lists or scaffolding placeholders.
+
+**Track during the run:**
+1. **Done this run** — every autonomous action you take. Categories: emails triaged (incl. archived/drafted/labelled counts), tasks created, tasks flagged for close, Xero updates attempted/succeeded/failed, bank↔invoice matches, bleed-check items flagged, payments reconciled. One bullet per category, with counts and key IDs. Skipped day-gated steps (Wednesday bleed, Friday timesheet) get a muted bullet stating the reason.
+2. **Sources** — per source: count of records pulled + status. OK in ink, Unavailable in terracotta with one-phrase reason. Include all sources you queried this run (Xero, Redbark, Gmail, Calendar, Google Tasks). If a source was skipped entirely, omit its row rather than showing a fake OK.
+
+These two sections are non-negotiable transparency — never drop them, even when empty (use "Nothing done this run" / explicit row per source).
 
 ```html
 <!DOCTYPE html>
-<html><body style="margin:0;padding:0;background:#f4f4f5;font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#0f172a;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:24px 0;">
+<html><body style="margin:0;padding:0;background:#b1e852;font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-weight:500;letter-spacing:-0.02em;color:#1e1e1a;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#b1e852;padding:32px 0;">
   <tr><td align="center">
-    <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:8px;overflow:hidden;">
+    <table role="presentation" width="660" cellpadding="0" cellspacing="0" style="max-width:660px;width:100%;background:#faf9f5;">
 
       <!-- Header -->
-      <tr><td style="background:#0f172a;color:#fff;padding:18px 24px;">
-        <div style="font-size:13px;letter-spacing:1px;opacity:0.7;text-transform:uppercase;">Zerobi Daily Brief</div>
-        <div style="font-size:18px;font-weight:600;margin-top:2px;">{{DATE_LONG}}</div>
+      <!-- Header: brand banner + date -->
+      <tr><td style="padding:28px 28px 18px;">
+        <img src="https://zerobi.au/zerobi-banner.svg" alt="Zerobi" width="280" style="display:block;width:280px;max-width:90%;height:auto;margin-bottom:18px;" />
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#50504a;">
+          <span style="display:inline-block;width:8px;height:8px;background:#d97757;border-radius:50%;vertical-align:middle;margin-right:10px;"></span>
+          Daily Brief
+        </div>
+        <div style="font-size:34px;font-weight:700;letter-spacing:-0.03em;line-height:1.02;color:#1e1e1a;margin-top:10px;">{{DATE_LONG}}</div>
       </td></tr>
 
       <!-- TL;DR -->
-      <tr><td style="padding:20px 24px 8px;font-size:15px;line-height:1.5;border-bottom:1px solid #e4e4e7;">
-        <strong>{{ONE_LINE_BOTTOM_LINE}}</strong>
+      <tr><td style="padding:6px 28px 24px;">
+        <div style="font-size:17px;line-height:1.45;font-weight:600;letter-spacing:-0.015em;color:#1e1e1a;">{{ONE_LINE_BOTTOM_LINE}}</div>
       </td></tr>
 
       <!-- Cash -->
-      <tr><td style="padding:18px 24px 4px;">
-        <div style="font-size:11px;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:6px;">Cash</div>
-        <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
-          {{CASH_ROWS — one per account, e.g.}}
-          <tr><td style="padding:3px 0;color:#475569;">Business · {{Account}}</td><td align="right" style="padding:3px 0;font-variant-numeric:tabular-nums;">${{X,XXX.XX}}</td></tr>
-          <tr><td style="padding:3px 0;color:#475569;">Personal · {{Account}}</td><td align="right" style="padding:3px 0;font-variant-numeric:tabular-nums;">${{X,XXX.XX}}</td></tr>
+      <tr><td style="padding:18px 28px 4px;">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#50504a;margin-bottom:10px;">
+          <span style="display:inline-block;width:8px;height:8px;background:#d97757;border-radius:50%;vertical-align:middle;margin-right:10px;"></span>Cash
+        </div>
+        <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#1e1e1a;">
+          {{For each account}}
+          <tr>
+            <td style="padding:4px 0;color:#50504a;">{{Business|Personal}} <span style="color:#6c6c64;">&middot; {{Account name}}</span></td>
+            <td align="right" style="padding:4px 0;font-variant-numeric:tabular-nums;font-weight:600;">${{X,XXX.XX}}</td>
+          </tr>
         </table>
       </td></tr>
 
       <!-- Calendar -->
-      <tr><td style="padding:18px 24px 4px;border-top:1px solid #f1f5f9;">
-        <div style="font-size:11px;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:6px;">Calendar</div>
-        <div style="font-size:14px;line-height:1.6;">
-          {{CALENDAR — each event as "<strong>HH:MM</strong> &middot; Title <span style='color:#94a3b8;'>· location</span><br>" or empty-state}}
+      <tr><td style="padding:24px 28px 4px;">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#50504a;margin-bottom:10px;">
+          <span style="display:inline-block;width:8px;height:8px;background:#d97757;border-radius:50%;vertical-align:middle;margin-right:10px;"></span>Calendar
+        </div>
+        <div style="font-size:14px;line-height:1.7;color:#1e1e1a;">
+          {{Each event: <strong style="font-weight:700;">HH:MM</strong> &middot; Title <span style="color:#6c6c64;">&middot; location</span><br>}}
         </div>
       </td></tr>
 
       <!-- Inbox -->
-      <tr><td style="padding:18px 24px 4px;border-top:1px solid #f1f5f9;">
-        <div style="font-size:11px;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:6px;">Inbox <span style="color:#94a3b8;font-weight:normal;">· {{N}} unread</span></div>
-        <div style="font-size:14px;line-height:1.6;">
-          {{INBOX_LINES — each as "From <span style='color:#94a3b8;'>· Subject</span> <span style='display:inline-block;padding:1px 6px;background:#f1f5f9;border-radius:3px;font-size:11px;color:#475569;'>category</span><br>"}}
+      <tr><td style="padding:24px 28px 4px;">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#50504a;margin-bottom:10px;">
+          <span style="display:inline-block;width:8px;height:8px;background:#d97757;border-radius:50%;vertical-align:middle;margin-right:10px;"></span>Inbox <span style="color:#6c6c64;font-weight:500;">&middot; {{N}} unread</span>
         </div>
-        {{IF DRAFTS_QUEUED: render compact list under "Drafts queued" label, else omit entire block}}
+        <div style="font-size:14px;line-height:1.7;color:#1e1e1a;">
+          {{Each email: From <span style="color:#6c6c64;">&middot; Subject</span> <span style="display:inline-block;padding:2px 8px;background:#1e1e1a;color:#b1e852;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;margin-left:4px;">category</span><br>}}
+        </div>
+        {{IF DRAFTS_QUEUED: render under a small muted "Drafts queued" sub-label, else omit entire block}}
       </td></tr>
 
       <!-- Money -->
-      <tr><td style="padding:18px 24px 4px;border-top:1px solid #f1f5f9;">
-        <div style="font-size:11px;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:6px;">Money</div>
-        <table width="100%" cellpadding="0" cellspacing="0" style="font-size:13px;">
-          {{For each outstanding invoice}}
+      <tr><td style="padding:24px 28px 4px;">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#50504a;margin-bottom:10px;">
+          <span style="display:inline-block;width:8px;height:8px;background:#d97757;border-radius:50%;vertical-align:middle;margin-right:10px;"></span>Money
+        </div>
+        <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#1e1e1a;">
+          {{Outstanding invoice rows}}
           <tr>
-            <td style="padding:4px 0;color:#0f172a;">INV-XXXX · Perigon Group</td>
-            <td align="right" style="padding:4px 0;font-variant-numeric:tabular-nums;">${{X,XXX}}</td>
-            <td align="right" style="padding:4px 0 4px 10px;color:#94a3b8;font-size:12px;">due DD Mon</td>
+            <td style="padding:5px 0;color:#1e1e1a;">INV-XXXX <span style="color:#6c6c64;">&middot; Perigon Group</span></td>
+            <td align="right" style="padding:5px 0;font-variant-numeric:tabular-nums;font-weight:600;">${{X,XXX}}</td>
+            <td align="right" style="padding:5px 0 5px 12px;color:#6c6c64;font-size:12px;">due DD Mon</td>
           </tr>
-          {{For each matched payment — green tick prefix}}
+          {{Paid rows — ink with check, no colour shift}}
           <tr>
-            <td style="padding:4px 0;color:#15803d;">✓ INV-XXXX · {{Contact}}</td>
-            <td align="right" style="padding:4px 0;font-variant-numeric:tabular-nums;color:#15803d;">${{X,XXX}}</td>
-            <td align="right" style="padding:4px 0 4px 10px;color:#94a3b8;font-size:12px;">paid DD Mon</td>
+            <td style="padding:5px 0;color:#1e1e1a;">&#10003; INV-XXXX <span style="color:#6c6c64;">&middot; {{Contact}}</span></td>
+            <td align="right" style="padding:5px 0;font-variant-numeric:tabular-nums;font-weight:600;">${{X,XXX}}</td>
+            <td align="right" style="padding:5px 0 5px 12px;color:#6c6c64;font-size:12px;">paid DD Mon</td>
           </tr>
-          {{For each unmatched credit — amber}}
+          {{Unmatched rows — terracotta ink}}
           <tr>
-            <td style="padding:4px 0;color:#b45309;">? Unmatched · {{payer}}</td>
-            <td align="right" style="padding:4px 0;font-variant-numeric:tabular-nums;color:#b45309;">${{X,XXX}}</td>
-            <td align="right" style="padding:4px 0 4px 10px;color:#94a3b8;font-size:12px;">DD Mon</td>
+            <td style="padding:5px 0;color:#d97757;">? Unmatched <span style="color:#b25d3f;">&middot; {{payer}}</span></td>
+            <td align="right" style="padding:5px 0;font-variant-numeric:tabular-nums;font-weight:600;color:#d97757;">${{X,XXX}}</td>
+            <td align="right" style="padding:5px 0 5px 12px;color:#b25d3f;font-size:12px;">DD Mon</td>
           </tr>
         </table>
       </td></tr>
 
-      <!-- Actions -->
-      <tr><td style="padding:18px 24px 22px;border-top:1px solid #f1f5f9;">
-        <div style="font-size:11px;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:8px;">Actions</div>
-        <ol style="margin:0;padding-left:18px;font-size:14px;line-height:1.7;">
-          {{For each action — status pill at end}}
-          <li>{{Action}} <span style="color:#94a3b8;">· ${{amount}}</span> <span style="display:inline-block;padding:1px 6px;background:#f1f5f9;border-radius:3px;font-size:11px;color:#475569;margin-left:4px;">{{status}}</span></li>
+      <!-- Done this run -->
+      <tr><td style="padding:24px 28px 4px;">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#50504a;margin-bottom:10px;">
+          <span style="display:inline-block;width:8px;height:8px;background:#d97757;border-radius:50%;vertical-align:middle;margin-right:10px;"></span>Done this run
+        </div>
+        <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.7;color:#1e1e1a;list-style:none;">
+          {{One bullet per autonomous action the routine took this run. Use ✓ glyph prefix. Examples:}}
+          <li style="padding:2px 0;"><span style="color:#d97757;font-weight:700;">&#10003;</span> Triaged 6 emails &middot; 3 archived, 2 drafts queued, 6 labelled</li>
+          <li style="padding:2px 0;"><span style="color:#d97757;font-weight:700;">&#10003;</span> Matched INV-XXXX to bank credit $X,XXX</li>
+          <li style="padding:2px 0;"><span style="color:#d97757;font-weight:700;">&#10003;</span> Created 1 Google Task &middot; "{{task title}}"</li>
+          {{For skipped steps, use muted bullet with reason}}
+          <li style="padding:2px 0;color:#6c6c64;"><span style="color:#6c6c64;">&middot;</span> Bleed check skipped &middot; not Wednesday</li>
+        </ul>
+      </td></tr>
+
+      <!-- Actions (for you) -->
+      <tr><td style="padding:24px 28px 4px;">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#50504a;margin-bottom:10px;">
+          <span style="display:inline-block;width:8px;height:8px;background:#d97757;border-radius:50%;vertical-align:middle;margin-right:10px;"></span>Actions <span style="color:#6c6c64;font-weight:500;">&middot; for you</span>
+        </div>
+        <ol style="margin:0;padding-left:20px;font-size:14px;line-height:1.75;color:#1e1e1a;">
+          {{Each action with status pill at end}}
+          <li>{{Action}} <span style="color:#6c6c64;">&middot; ${{amount}}</span> <span style="display:inline-block;padding:2px 8px;background:{{PILL_BG}};color:{{PILL_FG}};font-size:10px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;margin-left:4px;">{{status}}</span></li>
         </ol>
       </td></tr>
 
-      <!-- Optional: Bleed check (Wed only) -->
-      {{IF WEDNESDAY: append the bleed-check section using the same row pattern as Money, header label "Bleed check"}}
+      <!-- Optional Wednesday bleed-check section: same eyebrow + row pattern as Money -->
+      {{IF WEDNESDAY: append bleed-check block, label "Bleed check"}}
+
+      <!-- Sources (data provenance / health) -->
+      <tr><td style="padding:24px 28px 32px;">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#50504a;margin-bottom:10px;">
+          <span style="display:inline-block;width:8px;height:8px;background:#d97757;border-radius:50%;vertical-align:middle;margin-right:10px;"></span>Sources
+        </div>
+        <table width="100%" cellpadding="0" cellspacing="0" style="font-size:13px;color:#1e1e1a;">
+          {{One row per source. Status = OK (ink) or "unavailable" (terracotta). Include count of records pulled.}}
+          <tr><td style="padding:3px 0;color:#50504a;width:100px;">Xero</td><td style="padding:3px 0;color:#6c6c64;">{{N invoices, N contacts}}</td><td align="right" style="padding:3px 0;color:#1e1e1a;font-weight:600;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">OK</td></tr>
+          <tr><td style="padding:3px 0;color:#50504a;">Redbark</td><td style="padding:3px 0;color:#6c6c64;">{{N accounts, N transactions}}</td><td align="right" style="padding:3px 0;color:#1e1e1a;font-weight:600;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">OK</td></tr>
+          <tr><td style="padding:3px 0;color:#50504a;">Gmail</td><td style="padding:3px 0;color:#6c6c64;">{{N unread since yesterday}}</td><td align="right" style="padding:3px 0;color:#1e1e1a;font-weight:600;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">OK</td></tr>
+          <tr><td style="padding:3px 0;color:#50504a;">Calendar</td><td style="padding:3px 0;color:#6c6c64;">{{N events today}}</td><td align="right" style="padding:3px 0;color:#1e1e1a;font-weight:600;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">OK</td></tr>
+          <tr><td style="padding:3px 0;color:#50504a;">Google Tasks</td><td style="padding:3px 0;color:#6c6c64;">{{N open, N completed}}</td><td align="right" style="padding:3px 0;color:#1e1e1a;font-weight:600;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">OK</td></tr>
+          {{Failure example — use terracotta for unavailable}}
+          {{<tr><td style="padding:3px 0;color:#50504a;">Redbark</td><td style="padding:3px 0;color:#b25d3f;">connection error</td><td align="right" style="padding:3px 0;color:#d97757;font-weight:600;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Unavailable</td></tr>}}
+        </table>
+      </td></tr>
 
     </table>
-    <div style="font-size:11px;color:#94a3b8;margin-top:12px;">Generated {{TIMESTAMP}} · Reply or edit tasks in Google Tasks</div>
+    <!-- Footer: logo + link + timestamp -->
+    <table role="presentation" width="660" cellpadding="0" cellspacing="0" style="max-width:660px;width:100%;margin-top:14px;font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;">
+      <tr>
+        <td valign="middle" style="padding:0;">
+          <a href="https://zerobi.au/" style="text-decoration:none;color:#1e1e1a;">
+            <img src="https://zerobi.au/zerobi-icon.svg" alt="" width="26" height="26" style="display:inline-block;width:26px;height:26px;vertical-align:middle;margin-right:10px;filter:brightness(0);" />
+            <span style="font-size:12px;letter-spacing:0.08em;color:#1e1e1a;vertical-align:middle;font-weight:600;">zerobi.au</span>
+          </a>
+        </td>
+        <td align="right" valign="middle" style="padding:0;font-size:11px;letter-spacing:0.08em;color:#1e1e1a;opacity:0.55;">
+          Generated {{TIMESTAMP}}
+        </td>
+      </tr>
+    </table>
   </td></tr>
 </table>
 </body></html>
 ```
 
-**Status pill colours** (background / text):
-- `[new]` → `#fef3c7` / `#92400e` (amber)
-- `[tracked]` → `#f1f5f9` / `#475569` (slate)
-- `[done]` → `#dcfce7` / `#166534` (green)
-- `[flag-for-close]` → `#fee2e2` / `#991b1b` (red)
+**Asset hosting:** banner + icon SVGs are served from `https://zerobi.au/zerobi-banner.svg` and `https://zerobi.au/zerobi-icon.svg` (sourced from `zerobi-web/public/`). Both CORS-open, content-type `image/svg+xml`. Local copies in `assets/banner.svg` + `assets/logo.svg` are reference originals — keep in sync if you change them. If those URLs ever break, the email gracefully degrades to alt text ("Zerobi") and the rest renders fine.
+
+**Status pill palette** (`PILL_BG` / `PILL_FG`) — palette-coherent:
+- `[new]` → `#d97757` / `#1e1e1a` (terracotta on ink)
+- `[tracked]` → `#1e1e1a` / `#b1e852` (ink on lime)
+- `[done]` → `#9bd13d` / `#1e1e1a` (lime-dim on ink)
+- `[flag-for-close]` → `#b25d3f` / `#b1e852` (terracotta-dim on lime — high contrast urgency)
 
 **Subject line:** `Zerobi daily brief — {{DATE_SHORT}}` (e.g. `Zerobi daily brief — Wed 21 May`).
 
