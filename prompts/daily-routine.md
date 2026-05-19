@@ -28,7 +28,7 @@ You run in a remote sandbox — **no access to local files**. All state lives in
 Issue these calls in parallel. Native MCPs first; Zapier only where unavoidable.
 
 - Calendar events today, Brisbane time — `mcp__claude_ai_Google_Calendar__list_events` (native)
-- Gmail unread — `mcp__claude_ai_Gmail__search_threads` with query `in:inbox is:unread` (native)
+- Gmail unread — `mcp__claude_ai_Gmail__search_threads` with query **exactly** `in:inbox is:unread` (native). **Defensive filter after fetch:** drop any returned message whose `labels` array does not contain `UNREAD`. Never broaden this query — no `in:inbox` alone, no time-window variants (`newer_than:`, `after:`), no `is:starred`. Reading an already-read email wastes Zapier tasks on the downstream label/archive calls and risks re-triaging mail Angus has already handled.
 - Xero AR + cash — `mcp__claude_ai_Xero__get_contacts_and_receivables` and `mcp__claude_ai_Xero__get_cash_position` (native; two calls cover everything — no per-invoice search needed)
 - Google Tasks — `mcp__claude_ai_Zapier__google_tasks_get_tasks_by_list` with `show_completed=true` ONCE. The returned list contains both open and completed; filter in-memory. **Do not make a second `show_completed=false` call — wastes a Zapier task.**
 - Redbark — `list_accounts` then `list_balances` (all accounts in one batch) and `list_transactions` (last 3 days per Business connection). Tag accounts Business vs Personal by connection name. If Redbark errors → set `_meta.ok=false` on `financial/cash.json` and `financial/bank-balances.json`, skip cash + payment-match steps, continue.
@@ -45,7 +45,9 @@ For each credit transaction on a Business account in the last 3 days:
 
 ### 1b. Triage Gmail inbox
 
-For every unread email pulled in step 1:
+**Scope: ONLY messages that came back from step 1's `in:inbox is:unread` search AND still carry the `UNREAD` label at processing time.** Skip every read email — never label, archive, draft, or even open them. If a thread has both read and unread messages, operate only on the unread message(s).
+
+For every unread message pulled in step 1:
 
 **Categorise** into one of:
 - `Triage/Marketing` — bulk sender, unsubscribe link, no-reply, promotional keywords
