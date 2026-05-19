@@ -1,12 +1,13 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-19T11:22:00+10:00",
+    "fetched_at": "2026-05-20T07:04:00+10:00",
     "source": "redbark + claude_ai_Xero__get_cash_position",
-    "ok": true
+    "ok": false,
+    "note": "redbark unavailable — cash_at_bank set to 0. Xero reports cash_balance $16,086.03 (unverified against live bank feeds). Receivables: $0 (no outstanding AUTHORISED invoices). Payables: $15,426.00."
   },
-  "cash_at_bank": 15883.18,
-  "receivables": 5225.0,
-  "payables": 15426.0,
-  "working_capital": 5682.18,
-  "status": "healthy"
+  "cash_at_bank": 0,
+  "receivables": 0,
+  "payables": 15426,
+  "working_capital": -15426,
+  "status": "tight"
 }
