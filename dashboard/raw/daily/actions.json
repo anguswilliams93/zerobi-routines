@@ -1,4 +1,21 @@
 {
-  "_meta": { "fetched_at": "2026-05-19T07:00:00+10:00", "source": "daily-routine", "ok": true, "note": "simulated run — no tasks created, no Gmail triage, no email sent" },
-  "actions": []
+  "_meta": {
+    "fetched_at": "2026-05-19T11:22:00+10:00",
+    "source": "daily-routine",
+    "ok": true
+  },
+  "actions": [
+    {
+      "kind": "task",
+      "title": "Fix zerobi.au DNS / Proton DKIM warning",
+      "detail": "Domain no longer verified, DKIM record degraded, 93h warning window.",
+      "created_at": "2026-05-19T11:22:00+10:00"
+    },
+    {
+      "kind": "task",
+      "title": "Watch for Perigon payment $5,225 — INV-ZBI0125",
+      "detail": "Payment advice received 2026-05-19; reconcile in Xero once credit posts to CommBank.",
+      "created_at": "2026-05-19T11:22:00+10:00"
+    }
+  ]
 }

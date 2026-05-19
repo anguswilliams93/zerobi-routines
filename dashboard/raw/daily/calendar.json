@@ -1,22 +1,22 @@
 {
-  "_meta": { "fetched_at": "2026-05-19T07:00:00+10:00", "source": "claude_ai_Google_Calendar__list_events", "ok": true },
+  "_meta": {
+    "fetched_at": "2026-05-19T11:22:00+10:00",
+    "source": "zapier_google_calendar_find_events",
+    "ok": true
+  },
   "events": [
     {
-      "id": "75j64phpccq3cbb461hjib9k68pj2b9p71j3cbb174o66dr36grmacb66g",
-      "start": "2026-05-19T13:30:00+10:00",
-      "end": "2026-05-19T14:30:00+10:00",
-      "title": "Tim Catch-up",
-      "attendees": [],
-      "link": "https://www.google.com/calendar/event?eid=NzVqNjRwaHBjY3EzY2JiNDYxaGppYjlrNjhwajJiOXA3MWozY2JiMTc0bzY2ZHIzNmdybWFjYjY2ZyBhbmd1c0B6ZXJvYmkuYXU&ctz=Australia/Brisbane",
-      "all_day": false
-    },
-    {
-      "id": "75i6ad9j6lh36b9i6gojcb9k68p66b9o69gjgbb569gj4dphc5h30c9nc4",
       "start": "2026-05-19T14:30:00+10:00",
       "end": "2026-05-19T15:30:00+10:00",
       "title": "Cat Scan and Xray",
       "attendees": [],
-      "link": "https://www.google.com/calendar/event?eid=NzVpNmFkOWo2bGgzNmI5aTZnb2pjYjlrNjhwNjZiOW82OWdqZ2JiNTY5Z2o0ZHBoYzVoMzBjOW5jNCBhbmd1c0B6ZXJvYmkuYXU&ctz=Australia/Brisbane",
+      "all_day": false
+    },
+    {
+      "start": "2026-05-19T15:30:00+10:00",
+      "end": "2026-05-19T16:30:00+10:00",
+      "title": "Tim Catch-up",
+      "attendees": [],
       "all_day": false
     }
   ]

@@ -1,8 +1,12 @@
 {
-  "_meta": { "fetched_at": "2026-05-19T07:00:00+10:00", "source": "redbark + claude_ai_Xero__find_invoice", "ok": true },
-  "cash_at_bank": 10658.18,
-  "receivables": 5225,
-  "payables": 15426,
-  "working_capital": 457.18,
-  "status": "tight"
+  "_meta": {
+    "fetched_at": "2026-05-19T11:22:00+10:00",
+    "source": "redbark + claude_ai_Xero__get_cash_position",
+    "ok": true
+  },
+  "cash_at_bank": 15883.18,
+  "receivables": 5225.0,
+  "payables": 15426.0,
+  "working_capital": 5682.18,
+  "status": "healthy"
 }

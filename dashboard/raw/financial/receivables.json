@@ -1,7 +1,16 @@
 {
-  "_meta": { "fetched_at": "2026-05-19T07:00:00+10:00", "source": "claude_ai_Xero__get_contacts_and_receivables", "ok": true },
+  "_meta": {
+    "fetched_at": "2026-05-19T11:22:00+10:00",
+    "source": "claude_ai_Xero__get_contacts_and_receivables",
+    "ok": true
+  },
   "items": [
-    { "contact": "Perigon Group", "amount": 5225, "due_date": "2026-05-18", "days_overdue": 1 }
+    {
+      "contact": "Perigon Group",
+      "amount": 5225.0,
+      "due_date": "2026-05-18",
+      "days_overdue": 1
+    }
   ],
-  "total": 5225
+  "total": 5225.0
 }

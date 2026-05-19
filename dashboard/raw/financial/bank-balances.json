@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-19T00:00:00+10:00",
-    "source": "mcp__claude_ai_Redbark__list_transactions",
+    "fetched_at": "2026-05-19T11:22:00+10:00",
+    "source": "redbark + carry-forward",
     "ok": true,
-    "note": "Daily ending balance computed from current balance walked backwards across 30d of transactions"
+    "note": "Daily ending balance appended; series trimmed to last 30 days"
   },
   "headline": {
     "value": 15878.5,
@@ -14,7 +14,7 @@
     "value": 10294.2,
     "pct": 184.34,
     "direction": "up",
-    "period": "vs 30 days ago"
+    "period": "vs 29 days ago"
   },
   "series": [
     {
@@ -192,7 +192,7 @@
       "personal": 49.99
     },
     {
-      "timestamp": 1779148800000,
+      "timestamp": 1779494400000,
       "date": "2026-05-19",
       "business": 15867.4,
       "personal": 11.1
@@ -203,17 +203,17 @@
       "name": "Business",
       "account": "CommBank Business Transaction xxxx3231",
       "current": 15867.4,
+      "change_30d": 10652.56,
       "change_pct": 204.27,
-      "color": "var(--c-terracotta)",
-      "change_30d": 10652.56
+      "color": "var(--c-terracotta)"
     },
     {
       "name": "Personal",
       "account": "ING Orange Everyday xxxx6206",
       "current": 11.1,
+      "change_30d": -358.36,
       "change_pct": -97.0,
-      "color": "var(--ink)",
-      "change_30d": -358.36
+      "color": "var(--ink)"
     }
   ]
 }

@@ -1,21 +1,86 @@
 {
-  "generated_at": "2026-05-19T07:00:00+10:00",
+  "generated_at": "2026-05-19T11:22:00+10:00",
   "week": 21,
   "fy": "FY26",
   "sources": {
-    "daily/calendar.json":           { "fetched_at": "2026-05-19T07:00:00+10:00", "source": "claude_ai_Google_Calendar__list_events",   "ok": true },
-    "daily/unread.json":             { "fetched_at": "2026-05-12T17:53:00+10:00", "source": "zapier_microsoft_outlook",                "ok": false, "note": "find_emails action not enabled in Zapier — enable at /config" },
-    "daily/invoices.json":           { "fetched_at": "2026-05-12T17:58:00+10:00", "source": "calendar-migration (inbox scan unavailable)", "ok": true },
-    "daily/drafts.json":             { "fetched_at": "2026-05-12T17:53:00+10:00", "source": "zapier_microsoft_outlook",                "ok": false, "note": "drafts folder read not enabled" },
-    "daily/actions.json":            { "fetched_at": "2026-05-19T07:00:00+10:00", "source": "daily-routine",                           "ok": true, "note": "simulated run — empty" },
-    "weekly/calendar.json":          { "fetched_at": "2026-05-12T18:17:00+10:00", "source": "zapier_google_calendar_find_events",      "ok": true },
-    "weekly/inbox.json":             { "fetched_at": "2026-05-12T18:17:00+10:00", "source": "zapier_microsoft_outlook",                "ok": false, "note": "inbox throughput depends on email-search action" },
-    "financial/pl.json":             { "fetched_at": "2026-05-12T18:17:00+10:00", "source": "claude_ai_Xero__get_profit_and_loss",     "ok": true },
-    "financial/balance-sheet.json":  { "fetched_at": "2026-05-12T18:17:00+10:00", "source": "claude_ai_Xero__get_financial_position",  "ok": true },
-    "financial/cash.json":           { "fetched_at": "2026-05-19T07:00:00+10:00", "source": "redbark + claude_ai_Xero__find_invoice",  "ok": true },
-    "financial/customers.json":      { "fetched_at": "2026-05-12T18:17:00+10:00", "source": "claude_ai_Xero__get_top_customers_by_revenue", "ok": true },
-    "financial/receivables.json":    { "fetched_at": "2026-05-19T07:00:00+10:00", "source": "claude_ai_Xero__get_contacts_and_receivables", "ok": true },
-    "financial/bank-spend.json":     { "fetched_at": "2026-05-12T18:17:00+10:00", "source": "zapier_google_sheets",                    "ok": false, "note": "Sheets read not enabled in Zapier — enable at /config" },
-    "deadlines.json":                { "fetched_at": "2026-05-12T18:17:00+10:00", "source": "manual",                                  "ok": true }
+    "daily/calendar.json": {
+      "fetched_at": "2026-05-19T11:22:00+10:00",
+      "source": "zapier_google_calendar_find_events",
+      "ok": true
+    },
+    "daily/unread.json": {
+      "fetched_at": "2026-05-12T17:53:00+10:00",
+      "source": "zapier_microsoft_outlook",
+      "ok": false,
+      "note": "find_emails action not enabled in Zapier — enable at /config"
+    },
+    "daily/invoices.json": {
+      "fetched_at": "2026-05-12T17:58:00+10:00",
+      "source": "calendar-migration (inbox scan unavailable)",
+      "ok": true
+    },
+    "daily/drafts.json": {
+      "fetched_at": "2026-05-12T17:53:00+10:00",
+      "source": "zapier_microsoft_outlook",
+      "ok": false,
+      "note": "drafts folder read not enabled"
+    },
+    "daily/actions.json": {
+      "fetched_at": "2026-05-19T11:22:00+10:00",
+      "source": "daily-routine",
+      "ok": true
+    },
+    "weekly/calendar.json": {
+      "fetched_at": "2026-05-12T18:17:00+10:00",
+      "source": "zapier_google_calendar_find_events",
+      "ok": true
+    },
+    "weekly/inbox.json": {
+      "fetched_at": "2026-05-12T18:17:00+10:00",
+      "source": "zapier_microsoft_outlook",
+      "ok": false,
+      "note": "inbox throughput depends on email-search action"
+    },
+    "financial/pl.json": {
+      "fetched_at": "2026-05-12T18:17:00+10:00",
+      "source": "claude_ai_Xero__get_profit_and_loss",
+      "ok": true
+    },
+    "financial/balance-sheet.json": {
+      "fetched_at": "2026-05-12T18:17:00+10:00",
+      "source": "claude_ai_Xero__get_financial_position",
+      "ok": true
+    },
+    "financial/cash.json": {
+      "fetched_at": "2026-05-19T11:22:00+10:00",
+      "source": "redbark + claude_ai_Xero__get_cash_position",
+      "ok": true
+    },
+    "financial/customers.json": {
+      "fetched_at": "2026-05-12T18:17:00+10:00",
+      "source": "claude_ai_Xero__get_top_customers_by_revenue",
+      "ok": true
+    },
+    "financial/receivables.json": {
+      "fetched_at": "2026-05-19T11:22:00+10:00",
+      "source": "claude_ai_Xero__get_contacts_and_receivables",
+      "ok": true
+    },
+    "financial/bank-spend.json": {
+      "fetched_at": "2026-05-12T18:17:00+10:00",
+      "source": "zapier_google_sheets",
+      "ok": false,
+      "note": "Sheets read not enabled in Zapier — enable at /config"
+    },
+    "deadlines.json": {
+      "fetched_at": "2026-05-12T18:17:00+10:00",
+      "source": "manual",
+      "ok": true
+    },
+    "financial/bank-balances.json": {
+      "fetched_at": "2026-05-19T11:22:00+10:00",
+      "source": "redbark + carry-forward",
+      "ok": true
+    }
   }
 }
