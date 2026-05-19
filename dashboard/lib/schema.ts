@@ -169,6 +169,63 @@ export const BankSpend = withMeta(z.object({
 }));
 export type BankSpend = z.infer<typeof BankSpend>;
 
+/* ── financial/bank-balances.json (Pattern A — 30d series) ─── */
+export const BankBalanceDay = z.object({
+  timestamp: z.number(),
+  date: z.string(),
+  business: z.number(),
+  personal: z.number(),
+});
+export const BankBalanceSummary = z.object({
+  name: z.string(),
+  account: z.string(),
+  current: z.number(),
+  change_30d: z.number(),
+  change_pct: z.number(),
+  color: z.string(),
+});
+export const BankBalances = withMeta(z.object({
+  headline: z.object({ value: z.number(), currency: z.string().default("AUD"), label: z.string() }),
+  comparison: z.object({
+    value: z.number(),
+    pct: z.number(),
+    direction: z.enum(["up", "down", "flat"]),
+    period: z.string(),
+  }),
+  series: z.array(BankBalanceDay),
+  summary: z.array(BankBalanceSummary),
+}));
+export type BankBalances = z.infer<typeof BankBalances>;
+
+/* ── derived: MoneySnapshot (Pattern B prop shape) ─────────────
+   Composed at render time from pl + cash + bank-spend. Not persisted
+   to raw/ — kept as a zod schema so the block has a typed contract. */
+export const MoneySnapshot = z.object({
+  headline: z.object({
+    value: z.number(),
+    currency: z.string().default("AUD"),
+    label: z.string(),
+  }),
+  comparison: z.object({
+    value: z.number(),
+    pct: z.number(),
+    direction: z.enum(["up", "down", "flat"]),
+    period: z.string(),
+  }),
+  tiles: z
+    .array(z.object({ title: z.string(), value: z.string(), icon: z.string() }))
+    .length(4),
+  ring: z.array(
+    z.object({ name: z.string(), value: z.number(), color: z.string() }),
+  ),
+  progress: z.object({
+    label: z.string(),
+    pct: z.number(),
+    caption: z.string(),
+  }),
+});
+export type MoneySnapshot = z.infer<typeof MoneySnapshot>;
+
 /* ── deadlines.json ────────────────────────────────────────── */
 export const Deadline = z.object({
   label: z.string(),

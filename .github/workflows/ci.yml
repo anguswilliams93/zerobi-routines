@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel in-progress runs on same ref to save minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prompts:
+    name: Prompts · lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node scripts/lint-prompts.mjs
+
+  dashboard:
+    name: Dashboard · validate + typecheck + build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: dashboard/package-lock.json
+      - run: npm ci
+      # Schema gate — fails if any raw/*.json drifts from lib/schema.ts.
+      # This is the closest CI can get to "MCP endpoint test": the writer (daily
+      # routine) produces the JSON, and this verifies the reader can parse it.
+      - name: Validate raw/*.json against zod schemas
+        run: npm run validate:raw
+      - run: npm run typecheck
+      # Build catches schema-vs-component drift the typecheck might miss
+      # (e.g. accessing optional fields without guards).
+      - run: npm run build

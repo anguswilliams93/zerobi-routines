@@ -1,0 +1,219 @@
+{
+  "_meta": {
+    "fetched_at": "2026-05-19T00:00:00+10:00",
+    "source": "mcp__claude_ai_Redbark__list_transactions",
+    "ok": true,
+    "note": "Daily ending balance computed from current balance walked backwards across 30d of transactions"
+  },
+  "headline": {
+    "value": 15878.5,
+    "currency": "AUD",
+    "label": "Total cash across bank accounts"
+  },
+  "comparison": {
+    "value": 10294.2,
+    "pct": 184.34,
+    "direction": "up",
+    "period": "vs 30 days ago"
+  },
+  "series": [
+    {
+      "timestamp": 1776643200000,
+      "date": "2026-04-20",
+      "business": 5214.84,
+      "personal": 369.46
+    },
+    {
+      "timestamp": 1776729600000,
+      "date": "2026-04-21",
+      "business": 9059.11,
+      "personal": 356.45
+    },
+    {
+      "timestamp": 1776816000000,
+      "date": "2026-04-22",
+      "business": 7117.96,
+      "personal": 2251.61
+    },
+    {
+      "timestamp": 1776902400000,
+      "date": "2026-04-23",
+      "business": 7093.7,
+      "personal": 578.52
+    },
+    {
+      "timestamp": 1776988800000,
+      "date": "2026-04-24",
+      "business": 6188.16,
+      "personal": 355.43
+    },
+    {
+      "timestamp": 1777075200000,
+      "date": "2026-04-25",
+      "business": 6188.16,
+      "personal": 286.09
+    },
+    {
+      "timestamp": 1777161600000,
+      "date": "2026-04-26",
+      "business": 5898.13,
+      "personal": 354.46
+    },
+    {
+      "timestamp": 1777248000000,
+      "date": "2026-04-27",
+      "business": 5618.89,
+      "personal": 310.32
+    },
+    {
+      "timestamp": 1777334400000,
+      "date": "2026-04-28",
+      "business": 9516.64,
+      "personal": 129.09
+    },
+    {
+      "timestamp": 1777420800000,
+      "date": "2026-04-29",
+      "business": 7539.3,
+      "personal": 1971.61
+    },
+    {
+      "timestamp": 1777507200000,
+      "date": "2026-04-30",
+      "business": 7280.19,
+      "personal": 838.55
+    },
+    {
+      "timestamp": 1777593600000,
+      "date": "2026-05-01",
+      "business": 7249.76,
+      "personal": 316.75
+    },
+    {
+      "timestamp": 1777680000000,
+      "date": "2026-05-02",
+      "business": 7214.46,
+      "personal": 189.6
+    },
+    {
+      "timestamp": 1777766400000,
+      "date": "2026-05-03",
+      "business": 7214.46,
+      "personal": 18.58
+    },
+    {
+      "timestamp": 1777852800000,
+      "date": "2026-05-04",
+      "business": 7154.31,
+      "personal": 18.58
+    },
+    {
+      "timestamp": 1777939200000,
+      "date": "2026-05-05",
+      "business": 19952.38,
+      "personal": 18.58
+    },
+    {
+      "timestamp": 1778025600000,
+      "date": "2026-05-06",
+      "business": 17901.13,
+      "personal": 1943.57
+    },
+    {
+      "timestamp": 1778112000000,
+      "date": "2026-05-07",
+      "business": 12431.89,
+      "personal": 801.77
+    },
+    {
+      "timestamp": 1778198400000,
+      "date": "2026-05-08",
+      "business": 12329.94,
+      "personal": 149.94
+    },
+    {
+      "timestamp": 1778284800000,
+      "date": "2026-05-09",
+      "business": 11995.21,
+      "personal": 361.94
+    },
+    {
+      "timestamp": 1778371200000,
+      "date": "2026-05-10",
+      "business": 11978.22,
+      "personal": 361.94
+    },
+    {
+      "timestamp": 1778457600000,
+      "date": "2026-05-11",
+      "business": 11825.0,
+      "personal": 204.96
+    },
+    {
+      "timestamp": 1778544000000,
+      "date": "2026-05-12",
+      "business": 15912.44,
+      "personal": 105.96
+    },
+    {
+      "timestamp": 1778630400000,
+      "date": "2026-05-13",
+      "business": 14213.26,
+      "personal": 1999.56
+    },
+    {
+      "timestamp": 1778716800000,
+      "date": "2026-05-14",
+      "business": 16083.26,
+      "personal": 662.22
+    },
+    {
+      "timestamp": 1778803200000,
+      "date": "2026-05-15",
+      "business": 16083.26,
+      "personal": 618.79
+    },
+    {
+      "timestamp": 1778889600000,
+      "date": "2026-05-16",
+      "business": 15969.81,
+      "personal": 262.98
+    },
+    {
+      "timestamp": 1778976000000,
+      "date": "2026-05-17",
+      "business": 15888.41,
+      "personal": 49.99
+    },
+    {
+      "timestamp": 1779062400000,
+      "date": "2026-05-18",
+      "business": 15867.4,
+      "personal": 49.99
+    },
+    {
+      "timestamp": 1779148800000,
+      "date": "2026-05-19",
+      "business": 15867.4,
+      "personal": 11.1
+    }
+  ],
+  "summary": [
+    {
+      "name": "Business",
+      "account": "CommBank Business Transaction xxxx3231",
+      "current": 15867.4,
+      "change_pct": 204.27,
+      "color": "var(--c-terracotta)",
+      "change_30d": 10652.56
+    },
+    {
+      "name": "Personal",
+      "account": "ING Orange Everyday xxxx6206",
+      "current": 11.1,
+      "change_pct": -97.0,
+      "color": "var(--ink)",
+      "change_30d": -358.36
+    }
+  ]
+}

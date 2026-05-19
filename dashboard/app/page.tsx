@@ -5,8 +5,11 @@ import {
   DailyCalendar, DailyUnread, DailyInvoices, DailyActions,
   WeeklyCalendar, WeeklyInbox, WeeklyJira,
   ProfitLoss, BalanceSheet as BSchema, Cash, Customers, Receivables as RSchema, BankSpend,
+  BankBalances,
   Deadlines, GmailDrafts as GDSchema,
+  type MoneySnapshot,
 } from "@/lib/schema";
+import { AUDk } from "@/lib/format";
 
 import { PageHeader } from "@/components/page-header";
 import { SideNav } from "@/components/side-nav";
@@ -36,7 +39,49 @@ import { JiraTasks } from "@/components/schedule/jira-tasks";
 
 import { DeadlineGrid } from "@/components/deadlines/deadline-grid";
 
+import { MoneySnapshotCard } from "@/components/shadcn-studio/blocks/chart-money-snapshot";
+import { BankBalancesCard } from "@/components/shadcn-studio/blocks/chart-bank-balances";
+
 export const dynamic = "force-dynamic";
+
+function buildMoneySnapshot(
+  pl: ReturnType<typeof readRaw<typeof ProfitLoss>>,
+  cash: ReturnType<typeof readRaw<typeof Cash>>,
+  bankSpend: ReturnType<typeof readRaw<typeof BankSpend>>,
+): MoneySnapshot | null {
+  if (pl.stale || cash.stale) return null;
+  const ar = cash.data.receivables;
+  const ap = cash.data.payables;
+  const c = cash.data.cash_at_bank;
+  const wc = cash.data.working_capital;
+  const net30in = bankSpend.stale ? 0 : bankSpend.data.total_in;
+  const net30out = bankSpend.stale ? 0 : bankSpend.data.total_out;
+  return {
+    headline: { value: c, currency: "AUD", label: "Cash at bank" },
+    comparison: {
+      value: pl.data.net_profit_ytd,
+      pct: pl.data.net_margin_pct,
+      direction: pl.data.net_margin_pct >= 12 ? "up" : pl.data.net_margin_pct >= 0 ? "flat" : "down",
+      period: `${pl.data.period} margin`,
+    },
+    tiles: [
+      { title: "YTD Revenue",    value: AUDk(pl.data.revenue_ytd),  icon: "trend" },
+      { title: "YTD Net Profit", value: AUDk(pl.data.net_profit_ytd), icon: "dollar" },
+      { title: "Receivables",    value: AUDk(ar),                   icon: "discount" },
+      { title: "Payables",       value: AUDk(ap),                   icon: "orders" },
+    ],
+    ring: [
+      { name: "Cash",        value: Math.max(c, 0),  color: "var(--c-lime-dim)" },
+      { name: "Receivables", value: Math.max(ar, 0), color: "var(--c-terracotta)" },
+      { name: "Payables",    value: Math.max(ap, 0), color: "var(--ink-3)" },
+    ],
+    progress: {
+      label: "Net margin",
+      pct: Math.max(0, Math.min(100, pl.data.net_margin_pct)),
+      caption: `Working capital ${AUDk(wc)} · last 90d net ${AUDk(net30in - net30out)}`,
+    },
+  };
+}
 
 export default function Page() {
   const meta            = readRaw("meta.json", RawMeta);
@@ -57,8 +102,11 @@ export default function Page() {
   const customers       = readRaw("financial/customers.json", Customers);
   const receivables     = readRaw("financial/receivables.json", RSchema);
   const bankSpend       = readRaw("financial/bank-spend.json", BankSpend);
+  const bankBalances    = readRaw("financial/bank-balances.json", BankBalances);
 
   const deadlines       = readRaw("deadlines.json", Deadlines);
+
+  const moneySnapshot = buildMoneySnapshot(pl, cash, bankSpend);
 
   const today = new Date().toLocaleDateString("en-AU", { weekday: "long", day: "numeric", month: "long" });
 
@@ -129,11 +177,24 @@ export default function Page() {
             title="Money"
             note="Revenue, cash, receivables, expenses."
           />
-          <KpiStrip
-            pl={pl.stale ? null : pl.data}
-            cash={cash.stale ? null : cash.data}
-            customers={customers.stale ? null : customers.data}
-          />
+          {moneySnapshot ? (
+            <MoneySnapshotCard
+              data={moneySnapshot}
+              org={{ name: "Zerobi", email: "angus@zerobi.au" }}
+              className="w-full"
+            />
+          ) : (
+            <KpiStrip
+              pl={pl.stale ? null : pl.data}
+              cash={cash.stale ? null : cash.data}
+              customers={customers.stale ? null : customers.data}
+            />
+          )}
+          {!bankBalances.stale && (
+            <div className="row" style={{ marginTop: 14 }}>
+              <BankBalancesCard data={bankBalances.data} className="w-full" />
+            </div>
+          )}
           <div className="row two-col">
             <RevenueBars res={customers} />
             <PsiPanel res={customers} />

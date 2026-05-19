@@ -398,6 +398,30 @@ dashboard/raw/financial/receivables.json ← AUTHORISED Xero invoices from step 
   "total": <sum amount> }
   days_overdue: 0 if not yet due, else (today − due_date) in days.
 
+dashboard/raw/financial/bank-balances.json ← Pattern A line chart (30d series)
+  Append today's closing balance to existing series. Read the existing file first; if missing, start a new series with just today.
+  Targets:
+    - "business" = CommBank Business Transaction Account (44f489a1-f0fb-42d5-bca2-5210ef991e3f), current balance from Redbark step 1
+    - "personal" = ING Orange Everyday (d95116b3-9d59-420f-86d8-4fd86d7db274), current balance from Redbark step 1
+  Steps:
+    1. Read existing series (if any). Drop any entry with date == today.
+    2. Append { timestamp: <today 00:00 UTC millis>, date: <YYYY-MM-DD>, business: <bal>, personal: <bal> }.
+    3. Sort by timestamp ascending. Trim to last 30 entries.
+    4. Recompute headline.value = business + personal (today's row).
+    5. Recompute comparison vs first entry in series: value = today_total − first_total; pct = value / first_total * 100; direction = up if pct > 0.5 else down if pct < -0.5 else flat; period = "vs <N> days ago" where N = (today − first.date).
+    6. Recompute summary[].current and summary[].change_30d / change_pct against the first entry per account. summary[0].color = "var(--c-terracotta)", summary[1].color = "var(--c-ink-3)". Keep account labels stable: "CommBank Business Transaction xxxx3231" and "ING Orange Everyday xxxx6206".
+  Shape:
+  { "_meta": {...},
+    "headline": { "value": <num>, "currency": "AUD", "label": "Total cash across bank accounts" },
+    "comparison": { "value": <num>, "pct": <num>, "direction": "up"|"down"|"flat", "period": "vs N days ago" },
+    "series": [{ "timestamp": <millis>, "date": "YYYY-MM-DD", "business": <num>, "personal": <num> }, ...],
+    "summary": [
+      { "name": "Business", "account": "CommBank Business Transaction xxxx3231", "current": <num>, "change_30d": <num>, "change_pct": <num>, "color": "var(--c-terracotta)" },
+      { "name": "Personal", "account": "ING Orange Everyday xxxx6206",           "current": <num>, "change_30d": <num>, "change_pct": <num>, "color": "var(--c-ink-3)" }
+    ]
+  }
+  If Redbark is unavailable in step 1: do not touch this file (preserves last known good series). Source string: "redbark + carry-forward".
+
 dashboard/raw/meta.json                 ← merge — preserve sources you didn't touch
 { "generated_at": <now ISO Brisbane>,
   "week": <ISO week number>,
@@ -409,10 +433,13 @@ dashboard/raw/meta.json                 ← merge — preserve sources you didn'
     daily/actions.json         → "daily-routine"
     financial/cash.json        → "redbark + claude_ai_Xero__find_invoice"
     financial/receivables.json → "claude_ai_Xero__find_invoice"
+    financial/bank-balances.json → "redbark + carry-forward"
   If Redbark was unavailable in step 1, still write financial/cash.json with _meta.ok = false, _meta.note = "redbark unavailable", and use 0 for fields you can't fill (status="tight" as safe default). Same pattern for any other source failure — ok=false + note, never silently lie.
 ```
 
 **Skip these paths entirely** — the weekly scheduler populates them and overwriting with partial data corrupts the dashboard: `daily/unread.json`, `daily/invoices.json`, `daily/gmail-drafts.json`, `weekly/*`, `financial/pl.json`, `financial/balance-sheet.json`, `financial/customers.json`, `financial/bank-spend.json`, `deadlines.json`, `actions/queue.json` (queue is dashboard-write-only — UI mutates it via server actions; routine must never touch it).
+
+`financial/bank-balances.json` IS daily-routine-owned (append-style writer above). Don't move it to the weekly scheduler.
 
 **Idempotency:** every file is a full overwrite, not append. Running the routine twice in one day is safe — second run wins. The commit-skip-on-no-diff rule above keeps history clean when nothing changed.
 
