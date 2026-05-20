@@ -32,10 +32,13 @@ Issue these calls in parallel. Native MCPs first; Zapier only where unavoidable.
 - Xero AR + cash — `mcp__claude_ai_Xero__get_contacts_and_receivables` and `mcp__claude_ai_Xero__get_cash_position` (native; two calls cover everything — no per-invoice search needed)
 - Google Tasks — `mcp__claude_ai_Zapier__google_tasks_get_tasks_by_list` with `show_completed=true` ONCE. The returned list contains both open and completed; filter in-memory. **Do not make a second `show_completed=false` call — wastes a Zapier task.**
 - Redbark (REST API) — fetch via `curl` against `https://api.redbark.co` with header `Authorization: Bearer $REDBARK_API_KEY`, in order:
-  1. `GET /v1/connections` — connection IDs + names. Tag each Business vs Personal by connection name.
-  2. `GET /v1/accounts` — every account with its `accountId` and owning connection.
+  1. `GET /v1/connections` — connection IDs. **Connection name is `fiskil` for every connection (Redbark fronts the Fiskil aggregator) — NEVER classify Business vs Personal by connection name.**
+  2. `GET /v1/accounts` — every account with its `accountId` and owning `connectionId`. **Classify each account by its owning connection ID:**
+     - **Business** → connection `73841e53-ddc2-4840-914c-b85ddadd3b6e` (Business Transaction Account `44f489a1-f0fb-42d5-bca2-5210ef991e3f`, Business Online Saver `80b634cb-8be5-4035-953b-ef4b4073f87b`, Capital Growth Account `8c08184f-a8ca-4602-b0aa-cbd3338a79f7`).
+     - **Personal** → all other connections: ING `9c84f074-f36e-4c1e-b6c8-127828fafb11` (ING Orange Everyday `d95116b3-9d59-420f-86d8-4fd86d7db274`), Macquarie `498ef31e-c6c7-4b43-a25a-f8c804094772` (Offset Account `8d3d6e9f-3c79-4c67-aeaf-ed9a8a6e538f`, Offset Home Loan `dc655a35-d8ba-4e9a-bbba-211de919e37c`).
+     - **Fallback** if a connection ID ever changes (re-auth): tag by account name — name contains "Business" → Business; ING / Macquarie / other personal names → Personal.
   3. `GET /v1/balances?accountIds=<all accountIds, comma-separated>` — current balance per account (one batched call; chunk to ≤25 ids if the list is long).
-  4. `GET /v1/transactions?connectionId=<id>&from=<today−3d>&to=<today>` — once per **Business** connection.
+  4. `GET /v1/transactions?connectionId=73841e53-ddc2-4840-914c-b85ddadd3b6e&from=<today−3d>&to=<today>` — the **Business** connection (per the classification above).
   Read the JSON `data[]` arrays directly to pull balance amounts and transaction fields. Paginate every list endpoint via `pagination.hasMore` (advance `offset += limit`). Dates are `YYYY-MM-DD` (naive datetimes are rejected). On 429/503 honour `Retry-After` and back off — do **not** parallelise transactions (30/min + 4 in-flight cap). If any Redbark call errors (401 `invalid_token`, 503 `upstream_breaker_open`, etc.) → set `_meta.ok=false` on `financial/cash.json` and `financial/bank-balances.json`, skip cash + payment-match steps, continue.
 
 ### 1c. Match recent bank credits → Xero invoices (dashboard-only)
@@ -239,21 +242,23 @@ dashboard/raw/financial/bank-balances.json ← Pattern A line chart (30d series)
   Targets:
     - "business" = CommBank Business Transaction Account (44f489a1-f0fb-42d5-bca2-5210ef991e3f), current balance from Redbark step 1
     - "personal" = ING Orange Everyday (d95116b3-9d59-420f-86d8-4fd86d7db274), current balance from Redbark step 1
+    - "homeloan" = Macquarie Offset Home Loan (dc655a35-d8ba-4e9a-bbba-211de919e37c), current balance from Redbark step 1. This is a `loan` account — the balance is NEGATIVE (debt, e.g. -1145909.39). Write it as-is (negative); do not abs() it.
   Steps:
     1. Read existing series (if any). Drop any entry with date == today.
-    2. Append { timestamp: <today 00:00 UTC millis>, date: <YYYY-MM-DD>, business: <bal>, personal: <bal> }.
+    2. Append { timestamp: <today 00:00 UTC millis>, date: <YYYY-MM-DD>, business: <bal>, personal: <bal>, homeloan: <bal, negative> }.
     3. Sort by timestamp ascending. Trim to last 30 entries.
-    4. Recompute headline.value = business + personal (today's row).
-    5. Recompute comparison vs first entry in series: value = today_total − first_total; pct = value / first_total * 100; direction = up if pct > 0.5 else down if pct < -0.5 else flat; period = "vs <N> days ago" where N = (today − first.date).
-    6. Recompute summary[].current and summary[].change_30d / change_pct against the first entry per account. summary[0].color = "var(--c-terracotta)", summary[1].color = "var(--c-ink-3)". Keep account labels stable: "CommBank Business Transaction xxxx3231" and "ING Orange Everyday xxxx6206".
+    4. Recompute headline.value = business + personal (today's row). Cash only — do NOT include homeloan in the headline total (it's a liability shown on its own chart axis).
+    5. Recompute comparison vs first entry in series: value = today_total − first_total; pct = value / first_total * 100; direction = up if pct > 0.5 else down if pct < -0.5 else flat; period = "vs <N> days ago" where N = (today − first.date). Cash total only — exclude homeloan here too.
+    6. Recompute summary[].current and summary[].change_30d / change_pct against the first entry per account. change_30d = current − first; change_pct = change_30d / first * 100 for the cash accounts. For homeloan the balance is negative, so use change_pct = change_30d / abs(first) * 100 — that way paying the loan down (current less negative than first) gives a POSITIVE change_30d and change_pct (reads as improvement). summary[0].color = "var(--c-terracotta)", summary[1].color = "var(--c-ink-3)", summary[2].color = "var(--c-lime-dim)". Keep account labels stable: "CommBank Business Transaction xxxx3231", "ING Orange Everyday xxxx6206", "Macquarie Offset Home Loan xxxx5874".
   Shape:
   { "_meta": {...},
     "headline": { "value": <num>, "currency": "AUD", "label": "Total cash across bank accounts" },
     "comparison": { "value": <num>, "pct": <num>, "direction": "up"|"down"|"flat", "period": "vs N days ago" },
-    "series": [{ "timestamp": <millis>, "date": "YYYY-MM-DD", "business": <num>, "personal": <num> }, ...],
+    "series": [{ "timestamp": <millis>, "date": "YYYY-MM-DD", "business": <num>, "personal": <num>, "homeloan": <num, negative> }, ...],
     "summary": [
       { "name": "Business", "account": "CommBank Business Transaction xxxx3231", "current": <num>, "change_30d": <num>, "change_pct": <num>, "color": "var(--c-terracotta)" },
-      { "name": "Personal", "account": "ING Orange Everyday xxxx6206",           "current": <num>, "change_30d": <num>, "change_pct": <num>, "color": "var(--c-ink-3)" }
+      { "name": "Personal", "account": "ING Orange Everyday xxxx6206",           "current": <num>, "change_30d": <num>, "change_pct": <num>, "color": "var(--c-ink-3)" },
+      { "name": "Home loan", "account": "Macquarie Offset Home Loan xxxx5874",   "current": <num, negative>, "change_30d": <num>, "change_pct": <num>, "color": "var(--c-lime-dim)" }
     ]
   }
   If Redbark is unavailable in step 1: do not touch this file (preserves last known good series). Source string: "redbark-api + carry-forward".
