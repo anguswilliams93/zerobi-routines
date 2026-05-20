@@ -24,11 +24,11 @@ export type RawMeta = z.infer<typeof RawMeta>;
 export const CalendarEvent = z.object({
   id: z.string().optional(),
   start: z.string(),
-  end: z.string().optional(),
+  end: z.string().nullable().optional(),
   title: z.string(),
   attendees: z.array(z.string()).default([]),
   location: z.string().nullable().optional(),
-  link: z.string().optional(),
+  link: z.string().nullable().optional(),
   all_day: z.boolean().default(false),
 });
 export const DailyCalendar = withMeta(z.object({ events: z.array(CalendarEvent) }));
