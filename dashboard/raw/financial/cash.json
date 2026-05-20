@@ -1,13 +1,13 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-20T07:04:00+10:00",
-    "source": "redbark + claude_ai_Xero__get_cash_position",
+    "fetched_at": "2026-05-21T07:08:14+10:00",
+    "source": "redbark + claude_ai_Xero__find_invoice",
     "ok": false,
-    "note": "redbark unavailable — cash_at_bank set to 0. Xero reports cash_balance $16,086.03 (unverified against live bank feeds). Receivables: $0 (no outstanding AUTHORISED invoices). Payables: $15,426.00."
+    "note": "redbark unavailable; Xero API error: organization not configured in Zapier. Earlier run today (07:08 AEST) reported payables $15,426 from Xero."
   },
   "cash_at_bank": 0,
   "receivables": 0,
-  "payables": 15426,
-  "working_capital": -15426,
+  "payables": 0,
+  "working_capital": 0,
   "status": "tight"
 }

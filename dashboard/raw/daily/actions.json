@@ -1,15 +1,8 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-20T07:04:00+10:00",
+    "fetched_at": "2026-05-21T07:08:14+10:00",
     "source": "daily-routine",
     "ok": true
   },
-  "actions": [
-    {
-      "kind": "task",
-      "title": "Configure Atlassian data contribution settings for Blockscore org — before 17 Aug 2026",
-      "detail": "Atlassian legal terms change effective 17 Aug 2026. Navigate to Atlassian Administration > Security > Data contribution to review and configure settings for the Blockscore org.",
-      "created_at": "2026-05-20T07:07:00+10:00"
-    }
-  ]
+  "actions": []
 }
