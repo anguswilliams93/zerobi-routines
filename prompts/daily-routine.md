@@ -2,7 +2,7 @@
 
 Idempotent daily routine for Angus (angus@zerobi.au). Reconciles against existing Google Tasks rather than duplicating.
 
-You run in a remote sandbox — **no access to local files**. All state lives in MCP tools.
+You run in a remote sandbox. Most state lives in MCP tools; **bank data comes from the Redbark REST API over HTTPS** (`curl`, using the same sandbox shell that drives the git transport in step 3). No persistent local files beyond the repo you clone.
 
 ---
 
@@ -14,7 +14,7 @@ You run in a remote sandbox — **no access to local files**. All state lives in
 - **Gmail (read/search)** → `mcp__claude_ai_Gmail__search_threads`, `mcp__claude_ai_Gmail__get_thread`, `mcp__claude_ai_Gmail__list_labels` (native)
 - **Gmail (write: label / archive / create-label)** → `mcp__claude_ai_Zapier__gmail_add_label_to_email`, `_archive_email`, `_create_label` (Zapier required — native lacks write scope)
 - **Xero (read)** → `mcp__claude_ai_Xero__get_contacts_and_receivables`, `_get_cash_position` (native; one call each, covers full AR/AP/working capital and outstanding invoices)
-- **Banks (Redbark)** → `mcp__claude_ai_Redbark__list_accounts`, `_list_balances`, `_list_transactions` (native; covers Business + Personal)
+- **Banks (Redbark REST API)** → base `https://api.redbark.co`, header `Authorization: Bearer $REDBARK_API_KEY`. Endpoints: `GET /v1/connections`, `GET /v1/accounts`, `GET /v1/balances?accountIds=<csv>`, `GET /v1/transactions?connectionId=<uuid>&from=<YYYY-MM-DD>&to=<YYYY-MM-DD>`. Call via `curl` in the sandbox shell. Covers Business + Personal connections. **Requires the `REDBARK_API_KEY` routine secret. No longer uses the Redbark MCP server.**
 - **Google Tasks** → `mcp__claude_ai_Zapier__google_tasks_get_tasks_by_list`, `_create_task` (Zapier — no native equivalent)
 
 **No email send.** The local dashboard at `routines/dashboard/raw/` is the sole output of this routine. Do not draft replies or send a daily brief.
@@ -31,7 +31,12 @@ Issue these calls in parallel. Native MCPs first; Zapier only where unavoidable.
 - Gmail unread — `mcp__claude_ai_Gmail__search_threads` with query **exactly** `in:inbox is:unread` (native). **Defensive filter after fetch:** drop any returned message whose `labels` array does not contain `UNREAD`. Never broaden this query — no `in:inbox` alone, no time-window variants (`newer_than:`, `after:`), no `is:starred`. Reading an already-read email wastes Zapier tasks on the downstream label/archive calls and risks re-triaging mail Angus has already handled.
 - Xero AR + cash — `mcp__claude_ai_Xero__get_contacts_and_receivables` and `mcp__claude_ai_Xero__get_cash_position` (native; two calls cover everything — no per-invoice search needed)
 - Google Tasks — `mcp__claude_ai_Zapier__google_tasks_get_tasks_by_list` with `show_completed=true` ONCE. The returned list contains both open and completed; filter in-memory. **Do not make a second `show_completed=false` call — wastes a Zapier task.**
-- Redbark — `list_accounts` then `list_balances` (all accounts in one batch) and `list_transactions` (last 3 days per Business connection). Tag accounts Business vs Personal by connection name. If Redbark errors → set `_meta.ok=false` on `financial/cash.json` and `financial/bank-balances.json`, skip cash + payment-match steps, continue.
+- Redbark (REST API) — fetch via `curl` against `https://api.redbark.co` with header `Authorization: Bearer $REDBARK_API_KEY`, in order:
+  1. `GET /v1/connections` — connection IDs + names. Tag each Business vs Personal by connection name.
+  2. `GET /v1/accounts` — every account with its `accountId` and owning connection.
+  3. `GET /v1/balances?accountIds=<all accountIds, comma-separated>` — current balance per account (one batched call; chunk to ≤25 ids if the list is long).
+  4. `GET /v1/transactions?connectionId=<id>&from=<today−3d>&to=<today>` — once per **Business** connection.
+  Read the JSON `data[]` arrays directly to pull balance amounts and transaction fields. Paginate every list endpoint via `pagination.hasMore` (advance `offset += limit`). Dates are `YYYY-MM-DD` (naive datetimes are rejected). On 429/503 honour `Retry-After` and back off — do **not** parallelise transactions (30/min + 4 in-flight cap). If any Redbark call errors (401 `invalid_token`, 503 `upstream_breaker_open`, etc.) → set `_meta.ok=false` on `financial/cash.json` and `financial/bank-balances.json`, skip cash + payment-match steps, continue.
 
 ### 1c. Match recent bank credits → Xero invoices (dashboard-only)
 
@@ -99,7 +104,7 @@ Search both the open-tasks list AND the completed-tasks list (both fetched in st
 
 Sole-director leak detector. Scans last 7 days of bank transactions for cross-pollination between Business and Personal accounts.
 
-1. `mcp__claude_ai_Redbark__list_transactions` last 7 days on all accounts (already pulled if step 1 cache covers it; otherwise refetch).
+1. `GET /v1/transactions?connectionId=<id>&from=<today−7d>&to=<today>` via `curl` for **each** connection (Business + Personal) — last 7 days, all accounts. Reuse step 1's data if it already covers the window; otherwise refetch.
 
 2. On **Business accounts**, flag debits where the merchant/description strongly suggests personal spend:
    - Groceries (Coles, Woolworths, Aldi, IGA — unless tagged as office snacks)
@@ -208,6 +213,7 @@ Push auth uses the routine's existing GitHub credentials (same secret the bootst
 ```
 dashboard/raw/daily/calendar.json       ← step 1 Calendar events
 { "_meta": {...}, "events": [{ id, start, end?, title, attendees[], location?, link?, all_day }] }
+  Optional keys (end, location, link): OMIT the key entirely when the source has no value — never write null. The schema accepts a missing key, not an explicit null.
 
 dashboard/raw/daily/actions.json        ← every Google Task created this run (kind="task")
                                           + flagged-for-close items (kind="task", detail prefixed "FLAG: ")
@@ -250,7 +256,7 @@ dashboard/raw/financial/bank-balances.json ← Pattern A line chart (30d series)
       { "name": "Personal", "account": "ING Orange Everyday xxxx6206",           "current": <num>, "change_30d": <num>, "change_pct": <num>, "color": "var(--c-ink-3)" }
     ]
   }
-  If Redbark is unavailable in step 1: do not touch this file (preserves last known good series). Source string: "redbark + carry-forward".
+  If Redbark is unavailable in step 1: do not touch this file (preserves last known good series). Source string: "redbark-api + carry-forward".
 
 dashboard/raw/meta.json                 ← merge — preserve sources you didn't touch
 { "generated_at": <now ISO Brisbane>,
@@ -261,9 +267,9 @@ dashboard/raw/meta.json                 ← merge — preserve sources you didn'
   Source strings to use (match existing convention):
     daily/calendar.json        → "zapier_google_calendar_find_events"
     daily/actions.json         → "daily-routine"
-    financial/cash.json        → "redbark + claude_ai_Xero__find_invoice"
+    financial/cash.json        → "redbark-api + claude_ai_Xero__find_invoice"
     financial/receivables.json → "claude_ai_Xero__find_invoice"
-    financial/bank-balances.json → "redbark + carry-forward"
+    financial/bank-balances.json → "redbark-api + carry-forward"
   If Redbark was unavailable in step 1, still write financial/cash.json with _meta.ok = false, _meta.note = "redbark unavailable", and use 0 for fields you can't fill (status="tight" as safe default). Same pattern for any other source failure — ok=false + note, never silently lie.
 ```
 

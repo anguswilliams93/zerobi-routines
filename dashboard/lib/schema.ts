@@ -27,7 +27,7 @@ export const CalendarEvent = z.object({
   end: z.string().optional(),
   title: z.string(),
   attendees: z.array(z.string()).default([]),
-  location: z.string().optional(),
+  location: z.string().nullable().optional(),
   link: z.string().optional(),
   all_day: z.boolean().default(false),
 });
