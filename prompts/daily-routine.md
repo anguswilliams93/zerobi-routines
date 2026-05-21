@@ -223,8 +223,8 @@ dashboard/raw/daily/actions.json        ← every Google Task created this run (
                                           + drafts queued (kind="draft", title = recipient + subject)
 { "_meta": {...}, "actions": [{ kind, title, detail?, created_at }] }
 
-dashboard/raw/financial/cash.json       ← Redbark Business balances (sum) + Xero AR/AP from step 1
-{ "_meta": {...}, "cash_at_bank": <sum Business account balances>,
+dashboard/raw/financial/cash.json       ← Redbark CommBank balances (sum) + Xero AR/AP from step 1
+{ "_meta": {...}, "cash_at_bank": <sum of the three CommBank accounts ONLY — Business Transaction xxxx3231 (44f489a1-f0fb-42d5-bca2-5210ef991e3f) + Business Online Saver xxxx3258 (80b634cb-8be5-4035-953b-ef4b4073f87b) + Capital Growth xxxx0548 (8c08184f-a8ca-4602-b0aa-cbd3338a79f7). EXCLUDE personal ING, Macquarie Offset Account, and the Macquarie Offset Home Loan.>,
   "receivables": <sum AUTHORISED Xero invoices>,
   "payables": <sum DRAFT+AUTHORISED bills if pulled, else 0>,
   "working_capital": cash_at_bank + receivables − payables,
@@ -237,31 +237,44 @@ dashboard/raw/financial/receivables.json ← AUTHORISED Xero invoices from step 
   "total": <sum amount> }
   days_overdue: 0 if not yet due, else (today − due_date) in days.
 
-dashboard/raw/financial/bank-balances.json ← Pattern A line chart (30d series)
+dashboard/raw/financial/bank-balances.json ← Pattern A line chart (≈90d series; dashboard filters 30/60/90/All)
   Append today's closing balance to existing series. Read the existing file first; if missing, start a new series with just today.
   Targets:
     - "business" = CommBank Business Transaction Account (44f489a1-f0fb-42d5-bca2-5210ef991e3f), current balance from Redbark step 1
     - "personal" = ING Orange Everyday (d95116b3-9d59-420f-86d8-4fd86d7db274), current balance from Redbark step 1
     - "homeloan" = Macquarie Offset Home Loan (dc655a35-d8ba-4e9a-bbba-211de919e37c), current balance from Redbark step 1. This is a `loan` account — the balance is NEGATIVE (debt, e.g. -1145909.39). Write it as-is (negative); do not abs() it.
+    - "offset" = Macquarie Offset Account (8d3d6e9f-3c79-4c67-aeaf-ed9a8a6e538f), current balance from Redbark step 1. Positive cash that offsets the loan interest; plotted on the left (cash) axis as a solid green line. NOT added to the headline cash total.
   Steps:
     1. Read existing series (if any). Drop any entry with date == today.
-    2. Append { timestamp: <today 00:00 UTC millis>, date: <YYYY-MM-DD>, business: <bal>, personal: <bal>, homeloan: <bal, negative> }.
-    3. Sort by timestamp ascending. Trim to last 30 entries.
-    4. Recompute headline.value = business + personal (today's row). Cash only — do NOT include homeloan in the headline total (it's a liability shown on its own chart axis).
-    5. Recompute comparison vs first entry in series: value = today_total − first_total; pct = value / first_total * 100; direction = up if pct > 0.5 else down if pct < -0.5 else flat; period = "vs <N> days ago" where N = (today − first.date). Cash total only — exclude homeloan here too.
-    6. Recompute summary[].current and summary[].change_30d / change_pct against the first entry per account. change_30d = current − first; change_pct = change_30d / first * 100 for the cash accounts. For homeloan the balance is negative, so use change_pct = change_30d / abs(first) * 100 — that way paying the loan down (current less negative than first) gives a POSITIVE change_30d and change_pct (reads as improvement). summary[0].color = "var(--c-terracotta)", summary[1].color = "var(--c-ink-3)", summary[2].color = "var(--c-lime-dim)". Keep account labels stable: "CommBank Business Transaction xxxx3231", "ING Orange Everyday xxxx6206", "Macquarie Offset Home Loan xxxx5874".
+    2. Append { timestamp: <today 00:00 UTC millis>, date: <YYYY-MM-DD>, business: <bal>, personal: <bal>, homeloan: <bal, negative>, offset: <bal> }.
+    3. Sort by timestamp ascending. Trim to last 92 entries (≈3 months — the dashboard's 30/60/90-day filter needs at least 90 days of history; 92 gives a small buffer).
+    4. Recompute headline.value = business + personal + offset (today's row). "Total cash across bank accounts" — include the offset balance; EXCLUDE homeloan (it's a liability shown on its own chart axis).
+    5. Recompute comparison vs first entry in series: value = today_total − first_total; pct = value / first_total * 100; direction = up if pct > 0.5 else down if pct < -0.5 else flat; period = "vs <N> days ago" where N = (today − first.date). Cash total = business + personal + offset; exclude homeloan here too.
+    6. Recompute summary[].current and summary[].change_30d / change_pct against the first entry per account. change_30d = current − first; change_pct = change_30d / first * 100 for the cash accounts. For homeloan the balance is negative, so use change_pct = change_30d / abs(first) * 100 — that way paying the loan down (current less negative than first) gives a POSITIVE change_30d and change_pct (reads as improvement). summary[0].color = "var(--c-terracotta)", summary[1].color = "var(--c-ink-3)", summary[2].color = "var(--c-lime-dim)", summary[3].color = "var(--positive)". Keep account labels stable: "CommBank Business Transaction xxxx3231", "ING Orange Everyday xxxx6206", "Macquarie Offset Home Loan xxxx5874", "Macquarie Offset Account xxxx5882".
   Shape:
   { "_meta": {...},
     "headline": { "value": <num>, "currency": "AUD", "label": "Total cash across bank accounts" },
     "comparison": { "value": <num>, "pct": <num>, "direction": "up"|"down"|"flat", "period": "vs N days ago" },
-    "series": [{ "timestamp": <millis>, "date": "YYYY-MM-DD", "business": <num>, "personal": <num>, "homeloan": <num, negative> }, ...],
+    "series": [{ "timestamp": <millis>, "date": "YYYY-MM-DD", "business": <num>, "personal": <num>, "homeloan": <num, negative>, "offset": <num> }, ...],
     "summary": [
       { "name": "Business", "account": "CommBank Business Transaction xxxx3231", "current": <num>, "change_30d": <num>, "change_pct": <num>, "color": "var(--c-terracotta)" },
       { "name": "Personal", "account": "ING Orange Everyday xxxx6206",           "current": <num>, "change_30d": <num>, "change_pct": <num>, "color": "var(--c-ink-3)" },
-      { "name": "Home loan", "account": "Macquarie Offset Home Loan xxxx5874",   "current": <num, negative>, "change_30d": <num>, "change_pct": <num>, "color": "var(--c-lime-dim)" }
+      { "name": "Home loan", "account": "Macquarie Offset Home Loan xxxx5874",   "current": <num, negative>, "change_30d": <num>, "change_pct": <num>, "color": "var(--c-lime-dim)" },
+      { "name": "Offset",    "account": "Macquarie Offset Account xxxx5882",      "current": <num>, "change_30d": <num>, "change_pct": <num>, "color": "var(--positive)" }
     ]
   }
   If Redbark is unavailable in step 1: do not touch this file (preserves last known good series). Source string: "redbark-api + carry-forward".
+
+dashboard/raw/financial/loan-interest.json ← monthly interest charged on the home loan vs balance at the time
+  Maintenance is monthly, not daily. Fetch the loan account's recent transactions:
+  GET /v1/transactions?connectionId=498ef31e-c6c7-4b43-a25a-f8c804094772&from=<today−35d>&to=<today> (Macquarie Offset Home Loan account dc655a35-d8ba-4e9a-bbba-211de919e37c).
+  For each "Interest charged" transaction NOT already represented in the existing series (match on date):
+    1. Read existing loan-interest.json (if missing, leave as-is — it is seeded; do not recreate from scratch).
+    2. balance = the loan balance immediately BEFORE that interest charge (the prior month's closing balance — i.e. the last series entry's balance advanced by that entry's net of interest/fees/repayment, or read the running balance from Redbark at that date).
+    3. repayment = the "from account xx5882" credit in the same statement month (0 if none).
+    4. Append { timestamp: <charge date 00:00 UTC millis>, date, interest: <abs(amount)>, repayment, balance }. Sort ascending. Keep all entries (no trim — it is a long-run series).
+    5. headline.value = sum of all series interest; headline.label = "Interest charged · last N months"; comparison.value = mean interest/month, comparison.period = "avg / month", comparison.direction = "flat".
+  If no new "Interest charged" tx since last run: leave the file untouched (commit-skip-on-no-diff handles it). If Redbark unavailable: do not touch. Source: "redbark-transactions (loan)".
 
 dashboard/raw/meta.json                 ← merge — preserve sources you didn't touch
 { "generated_at": <now ISO Brisbane>,

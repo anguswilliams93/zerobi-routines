@@ -12,7 +12,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { Bar, BarChart, Label, Pie, PieChart } from "recharts";
+import { Label, Pie, PieChart } from "recharts";
 
 import {
   type ChartConfig,
@@ -62,10 +62,6 @@ export function MoneySnapshotCard({
       ]),
     ),
   };
-
-  const planBarsConfig = {
-    value: { label: data.progress.label },
-  } satisfies ChartConfig;
 
   const ringData = data.ring.map((seg) => ({
     name: seg.name,
@@ -216,24 +212,33 @@ export function MoneySnapshotCard({
                   </div>
                 ))}
               </div>
-              <ChartContainer config={planBarsConfig} className="h-7 w-full">
-                <BarChart
-                  accessibilityLayer
-                  data={planBarsData}
-                  margin={{ left: 0, right: 0 }}
-                  maxBarSize={14}
+              <div className="flex flex-col gap-1.5">
+                <div
+                  className="flex w-full items-stretch gap-[3px]"
+                  role="meter"
+                  aria-valuenow={Math.round(data.progress.pct)}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label={data.progress.label}
                 >
-                  <Bar
-                    dataKey="value"
-                    fill="var(--c-terracotta)"
-                    background={{
-                      fill: "color-mix(in oklab, var(--ink) 10%, transparent)",
-                      radius: 8,
-                    }}
-                    radius={8}
-                  />
-                </BarChart>
-              </ChartContainer>
+                  {planBarsData.map((b) => (
+                    <span
+                      key={b.bucket}
+                      className="h-7 flex-1 rounded-[2px]"
+                      style={{
+                        background: b.value
+                          ? "var(--c-terracotta)"
+                          : "color-mix(in oklab, var(--ink) 10%, transparent)",
+                      }}
+                    />
+                  ))}
+                </div>
+                <div className="flex justify-between mono text-[9px] uppercase tracking-wider text-[var(--ink-4)]">
+                  <span>0%</span>
+                  <span>{filledBars}/{TOTAL_BARS} segments</span>
+                  <span>100%</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

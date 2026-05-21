@@ -175,6 +175,8 @@ export const BankBalanceDay = z.object({
   date: z.string(),
   business: z.number(),
   personal: z.number(),
+  homeloan: z.number(),
+  offset: z.number(),
 });
 export const BankBalanceSummary = z.object({
   name: z.string(),
@@ -196,6 +198,26 @@ export const BankBalances = withMeta(z.object({
   summary: z.array(BankBalanceSummary),
 }));
 export type BankBalances = z.infer<typeof BankBalances>;
+
+/* ── financial/loan-interest.json (monthly interest charged vs loan balance) ─── */
+export const LoanInterestEntry = z.object({
+  timestamp: z.number(),
+  date: z.string(),
+  interest: z.number(),
+  repayment: z.number(),
+  balance: z.number(),
+});
+export const LoanInterest = withMeta(z.object({
+  headline: z.object({ value: z.number(), currency: z.string().default("AUD"), label: z.string() }),
+  comparison: z.object({
+    value: z.number(),
+    pct: z.number(),
+    direction: z.enum(["up", "down", "flat"]),
+    period: z.string(),
+  }),
+  series: z.array(LoanInterestEntry),
+}));
+export type LoanInterest = z.infer<typeof LoanInterest>;
 
 /* ── derived: MoneySnapshot (Pattern B prop shape) ─────────────
    Composed at render time from pl + cash + bank-spend. Not persisted

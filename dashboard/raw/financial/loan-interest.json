@@ -1,0 +1,91 @@
+{
+  "_meta": {
+    "fetched_at": "2026-05-21T11:00:00+10:00",
+    "source": "redbark-transactions (Macquarie Offset Home Loan, 12mo)",
+    "ok": true,
+    "note": "Monthly interest charged on the home loan and the balance it was charged against. Reconstructed from loan drawdown 2025-06-26 (-1,159,650) forward; reconciles to live balance -1,145,909.39."
+  },
+  "headline": {
+    "value": 52047.79,
+    "currency": "AUD",
+    "label": "Interest charged · last 10 months"
+  },
+  "comparison": {
+    "value": 5204.78,
+    "pct": 0,
+    "direction": "flat",
+    "period": "avg / month"
+  },
+  "series": [
+    {
+      "timestamp": 1753488000000,
+      "date": "2025-07-26",
+      "interest": 5292.35,
+      "repayment": 6725.3,
+      "balance": -1160000
+    },
+    {
+      "timestamp": 1756166400000,
+      "date": "2025-08-26",
+      "interest": 5340.87,
+      "repayment": 6725.3,
+      "balance": -1158567.05
+    },
+    {
+      "timestamp": 1758844800000,
+      "date": "2025-09-26",
+      "interest": 5182.04,
+      "repayment": 6541.73,
+      "balance": -1157182.62
+    },
+    {
+      "timestamp": 1761436800000,
+      "date": "2025-10-26",
+      "interest": 5037.78,
+      "repayment": 6541.73,
+      "balance": -1155822.93
+    },
+    {
+      "timestamp": 1764115200000,
+      "date": "2025-11-26",
+      "interest": 5220.19,
+      "repayment": 6541.73,
+      "balance": -1154318.98
+    },
+    {
+      "timestamp": 1766707200000,
+      "date": "2025-12-26",
+      "interest": 5041,
+      "repayment": 6665.73,
+      "balance": -1152997.44
+    },
+    {
+      "timestamp": 1769385600000,
+      "date": "2026-01-26",
+      "interest": 5209.11,
+      "repayment": 6541.73,
+      "balance": -1151496.71
+    },
+    {
+      "timestamp": 1772064000000,
+      "date": "2026-02-26",
+      "interest": 5267.64,
+      "repayment": 6541.73,
+      "balance": -1150164.09
+    },
+    {
+      "timestamp": 1774483200000,
+      "date": "2026-03-26",
+      "interest": 4907.2,
+      "repayment": 6718.71,
+      "balance": -1148890
+    },
+    {
+      "timestamp": 1777161600000,
+      "date": "2026-04-26",
+      "interest": 5549.61,
+      "repayment": 6718.71,
+      "balance": -1147078.49
+    }
+  ]
+}

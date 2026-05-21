@@ -11,7 +11,7 @@ import {
   RawMeta,
   DailyCalendar, DailyUnread, DailyInvoices, DailyActions, GmailDrafts,
   WeeklyCalendar, WeeklyInbox, WeeklyJira,
-  ProfitLoss, BalanceSheet, Cash, Customers, Receivables, BankSpend, BankBalances,
+  ProfitLoss, BalanceSheet, Cash, Customers, Receivables, BankSpend, BankBalances, LoanInterest,
   Deadlines,
   QueueFile,
 } from "../lib/schema";
@@ -35,6 +35,7 @@ const MAP: Record<string, z.ZodTypeAny> = {
   "financial/receivables.json":    Receivables,
   "financial/bank-spend.json":     BankSpend,
   "financial/bank-balances.json":  BankBalances,
+  "financial/loan-interest.json":  LoanInterest,
   "deadlines.json":                Deadlines,
   "actions/queue.json":            QueueFile,
 };

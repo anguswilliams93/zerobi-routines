@@ -5,7 +5,7 @@ import {
   DailyCalendar, DailyUnread, DailyInvoices, DailyActions,
   WeeklyCalendar, WeeklyInbox, WeeklyJira,
   ProfitLoss, BalanceSheet as BSchema, Cash, Customers, Receivables as RSchema, BankSpend,
-  BankBalances,
+  BankBalances, LoanInterest,
   Deadlines, GmailDrafts as GDSchema,
   type MoneySnapshot,
 } from "@/lib/schema";
@@ -41,6 +41,7 @@ import { DeadlineGrid } from "@/components/deadlines/deadline-grid";
 
 import { MoneySnapshotCard } from "@/components/shadcn-studio/blocks/chart-money-snapshot";
 import { BankBalancesCard } from "@/components/shadcn-studio/blocks/chart-bank-balances";
+import { LoanInterestCard } from "@/components/shadcn-studio/blocks/chart-loan-interest";
 
 export const dynamic = "force-dynamic";
 
@@ -103,6 +104,7 @@ export default function Page() {
   const receivables     = readRaw("financial/receivables.json", RSchema);
   const bankSpend       = readRaw("financial/bank-spend.json", BankSpend);
   const bankBalances    = readRaw("financial/bank-balances.json", BankBalances);
+  const loanInterest    = readRaw("financial/loan-interest.json", LoanInterest);
 
   const deadlines       = readRaw("deadlines.json", Deadlines);
 
@@ -193,6 +195,11 @@ export default function Page() {
           {!bankBalances.stale && (
             <div className="row" style={{ marginTop: 14 }}>
               <BankBalancesCard data={bankBalances.data} className="w-full" />
+            </div>
+          )}
+          {!loanInterest.stale && (
+            <div className="row" style={{ marginTop: 14 }}>
+              <LoanInterestCard data={loanInterest.data} className="w-full" />
             </div>
           )}
           <div className="row two-col">

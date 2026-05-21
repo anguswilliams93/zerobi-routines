@@ -23,7 +23,7 @@
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --radius: 0.25rem;
-  --background: #b1e852;
+  --background: #ebece9;
   --foreground: #1e1e1a;
 
   /* ── ZEROBI website palette (koji21 lime / ink / terracotta) ── */
@@ -34,11 +34,11 @@
   --c-terracotta:     #d97757;
   --c-terracotta-dim: #b25d3f;
 
-  --bg:           #b1e852;
-  --bg-2:         #a4dc44;
-  --bg-3:         #c7ee72;
-  --surface:      #c7ee72;
-  --surface-2:    #bce663;
+  --bg:           #ebece9;
+  --bg-2:         #e1e3df;
+  --bg-3:         #f5f6f3;
+  --surface:      #ffffff;
+  --surface-2:    #f5f6f3;
   --ink:          #1e1e1a;
   --ink-2:        #2c2c27;
   --ink-3:        #50504a;
@@ -56,6 +56,9 @@
   --danger:       #b73a3a;
   --danger-dim:   rgba(183, 58, 58, 0.10);
   --danger-line:  rgba(183, 58, 58, 0.32);
+  --positive:     #2f6b21;
+  --positive-dim: rgba(47, 107, 33, 0.10);
+  --positive-line: rgba(47, 107, 33, 0.32);
   --warning:      #b25d3f;
   --warning-dim:  rgba(217, 119, 87, 0.14);
   --info:         #2e6ea8;
@@ -111,6 +114,9 @@
   --danger:       #e07b7b;
   --danger-dim:   rgba(224, 123, 123, 0.14);
   --danger-line:  rgba(224, 123, 123, 0.36);
+  --positive:     #b1e852;
+  --positive-dim: rgba(177, 232, 82, 0.14);
+  --positive-line: rgba(177, 232, 82, 0.36);
   --warning:      #e09a78;
   --warning-dim:  rgba(224, 154, 120, 0.14);
   --info:         #7ab3e0;
