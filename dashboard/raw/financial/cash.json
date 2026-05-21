@@ -1,13 +1,13 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-21T11:00:00+10:00",
-    "source": "redbark-balances (live) + claude_ai_Xero (AR/AP last-known)",
-    "ok": true,
-    "note": "Cash at bank = sum of CommBank accounts only (Business Transaction + Business Online Saver + Capital Growth). Live from Redbark. Receivables $0 (no outstanding AUTHORISED invoices, confirmed 07:08 run). Payables $15,426 carried from earlier Xero run — Xero org reconnect pending in Zapier."
+    "fetched_at": "2026-05-22T07:06:29+10:00",
+    "source": "redbark-api + claude_ai_Xero__find_invoice",
+    "ok": false,
+    "note": "Redbark unavailable (REDBARK_API_KEY not set in this session). Last known cash at bank $13,569.95 from 11:00 AEST run. Xero org selection not configured in Zapier — cannot fetch AR."
   },
-  "cash_at_bank": 13569.95,
+  "cash_at_bank": 0,
   "receivables": 0,
-  "payables": 15426,
-  "working_capital": -1856.05,
+  "payables": 0,
+  "working_capital": 0,
   "status": "tight"
 }
