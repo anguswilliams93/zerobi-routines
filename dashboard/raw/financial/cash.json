@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-22T07:06:29+10:00",
+    "fetched_at": "2026-05-22T17:07:00+10:00",
     "source": "redbark-api + claude_ai_Xero__find_invoice",
     "ok": false,
-    "note": "Redbark unavailable (REDBARK_API_KEY not set in this session). Last known cash at bank $13,569.95 from 11:00 AEST run. Xero org selection not configured in Zapier — cannot fetch AR."
+    "note": "Redbark unavailable (host not in allowlist in this sandbox). Xero org selection not configured in Zapier. Last known cash at bank ~$13,554 from 2026-05-21."
   },
   "cash_at_bank": 0,
   "receivables": 0,

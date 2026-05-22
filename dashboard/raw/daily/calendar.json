@@ -1,17 +1,8 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-22T07:06:43+10:00",
+    "fetched_at": "2026-05-22T17:07:00+10:00",
     "source": "zapier_google_calendar_find_events",
     "ok": true
   },
-  "events": [
-    {
-      "id": "r70j8qqt4mmdth2q4dljp6c1q4",
-      "start": "2026-05-21T18:45:00+10:00",
-      "end": "2026-05-21T19:45:00+10:00",
-      "title": "Reservation at La Stradina",
-      "attendees": ["angus@zerobi.au"],
-      "all_day": false
-    }
-  ]
+  "events": []
 }

@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-05-22T07:10:00+10:00",
+  "generated_at": "2026-05-22T17:07:00+10:00",
   "week": 21,
   "fy": "FY26",
   "sources": {
     "daily/calendar.json": {
-      "fetched_at": "2026-05-22T07:06:43+10:00",
+      "fetched_at": "2026-05-22T17:07:00+10:00",
       "source": "zapier_google_calendar_find_events",
       "ok": true
     },
@@ -26,7 +26,7 @@
       "note": "drafts folder read not enabled"
     },
     "daily/actions.json": {
-      "fetched_at": "2026-05-22T07:06:47+10:00",
+      "fetched_at": "2026-05-22T17:07:00+10:00",
       "source": "daily-routine",
       "ok": true
     },
@@ -52,10 +52,10 @@
       "ok": true
     },
     "financial/cash.json": {
-      "fetched_at": "2026-05-22T07:06:29+10:00",
+      "fetched_at": "2026-05-22T17:07:00+10:00",
       "source": "redbark-api + claude_ai_Xero__find_invoice",
       "ok": false,
-      "note": "Redbark unavailable (REDBARK_API_KEY not set in this session). Last known cash $13,569.95 from 11:00 AEST run. Xero org selection not configured in Zapier."
+      "note": "Redbark unavailable (host not in allowlist in this sandbox). Xero org selection not configured in Zapier. Last known cash ~$13,554 from 2026-05-21."
     },
     "financial/customers.json": {
       "fetched_at": "2026-05-12T18:17:00+10:00",
@@ -63,10 +63,10 @@
       "ok": true
     },
     "financial/receivables.json": {
-      "fetched_at": "2026-05-22T07:06:29+10:00",
+      "fetched_at": "2026-05-22T17:07:00+10:00",
       "source": "claude_ai_Xero__find_invoice",
       "ok": false,
-      "note": "Xero org selection not configured in Zapier — cannot fetch AR"
+      "note": "Xero org selection not configured in Zapier — cannot fetch AUTHORISED invoices this run"
     },
     "financial/bank-spend.json": {
       "fetched_at": "2026-05-12T18:17:00+10:00",

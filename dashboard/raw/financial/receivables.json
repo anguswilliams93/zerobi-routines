@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-22T07:06:29+10:00",
+    "fetched_at": "2026-05-22T17:07:00+10:00",
     "source": "claude_ai_Xero__find_invoice",
     "ok": false,
     "note": "Xero org selection not configured in Zapier — cannot fetch AUTHORISED invoices this run"
