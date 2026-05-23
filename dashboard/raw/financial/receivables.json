@@ -1,10 +1,16 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-22T17:07:00+10:00",
+    "fetched_at": "2026-05-23T11:07:00+10:00",
     "source": "claude_ai_Xero__find_invoice",
-    "ok": false,
-    "note": "Xero org selection not configured in Zapier — cannot fetch AUTHORISED invoices this run"
+    "ok": true
   },
-  "items": [],
-  "total": 0
+  "items": [
+    {
+      "contact": "Perigon Group",
+      "amount": 4180,
+      "due_date": "2026-05-25",
+      "days_overdue": 0
+    }
+  ],
+  "total": 4180
 }
