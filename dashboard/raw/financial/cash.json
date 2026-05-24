@@ -1,13 +1,13 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-23T11:07:00+10:00",
+    "fetched_at": "2026-05-25T07:02:00+10:00",
     "source": "redbark-api + claude_ai_Xero__find_invoice",
     "ok": false,
-    "note": "Redbark unavailable (host not in allowlist). Last known CommBank cash ~$13,554 from 2026-05-21. Receivables confirmed via Xero: INV-ZBI0126 $4,180 Perigon due 25 May."
+    "note": "Redbark unavailable (host not in allowlist). Receivables confirmed via Xero: INV-ZBI0126 $5,225 Perigon due 2026-05-25."
   },
   "cash_at_bank": 0,
-  "receivables": 4180,
+  "receivables": 5225,
   "payables": 0,
-  "working_capital": 4180,
+  "working_capital": 5225,
   "status": "tight"
 }

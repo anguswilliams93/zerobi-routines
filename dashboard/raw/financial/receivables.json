@@ -1,16 +1,16 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-23T11:07:00+10:00",
+    "fetched_at": "2026-05-25T07:02:00+10:00",
     "source": "claude_ai_Xero__find_invoice",
     "ok": true
   },
   "items": [
     {
       "contact": "Perigon Group",
-      "amount": 4180,
+      "amount": 5225,
       "due_date": "2026-05-25",
       "days_overdue": 0
     }
   ],
-  "total": 4180
+  "total": 5225
 }
