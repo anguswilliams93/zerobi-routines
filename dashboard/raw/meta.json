@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-05-25T07:07:00+10:00",
+  "generated_at": "2026-05-25T07:12:00+10:00",
   "week": 22,
   "fy": "FY26",
   "sources": {
     "daily/calendar.json": {
-      "fetched_at": "2026-05-25T07:02:00+10:00",
+      "fetched_at": "2026-05-25T07:08:00+10:00",
       "source": "zapier_google_calendar_find_events",
       "ok": true
     },
@@ -26,7 +26,7 @@
       "note": "drafts folder read not enabled"
     },
     "daily/actions.json": {
-      "fetched_at": "2026-05-25T07:02:00+10:00",
+      "fetched_at": "2026-05-25T07:08:00+10:00",
       "source": "daily-routine",
       "ok": true
     },
@@ -52,10 +52,10 @@
       "ok": true
     },
     "financial/cash.json": {
-      "fetched_at": "2026-05-25T07:02:00+10:00",
+      "fetched_at": "2026-05-25T07:08:00+10:00",
       "source": "redbark-api + claude_ai_Xero__find_invoice",
       "ok": false,
-      "note": "Redbark unavailable (host not in allowlist). Receivables confirmed via Xero: INV-ZBI0126 $5,225 Perigon due 2026-05-25."
+      "note": "Redbark unavailable (API key not set). Xero receivables $5,225 INV-ZBI0126 Perigon due today. Payables $15,426."
     },
     "financial/customers.json": {
       "fetched_at": "2026-05-12T18:17:00+10:00",
@@ -63,7 +63,7 @@
       "ok": true
     },
     "financial/receivables.json": {
-      "fetched_at": "2026-05-25T07:02:00+10:00",
+      "fetched_at": "2026-05-25T07:08:00+10:00",
       "source": "claude_ai_Xero__find_invoice",
       "ok": true
     },
