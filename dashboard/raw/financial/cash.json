@@ -1,13 +1,13 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-25T07:08:00+10:00",
+    "fetched_at": "2026-05-27T07:09:10+10:00",
     "source": "redbark-api + claude_ai_Xero__find_invoice",
     "ok": false,
-    "note": "Redbark unavailable (API key not set). Receivables confirmed via Xero: INV-ZBI0126 $5,225 Perigon due 2026-05-25. Payables from Xero: $15,426."
+    "note": "Redbark unavailable (API key not set in env). cash_at_bank=0. Xero snapshot 2026-05-25: receivables $5,225 (likely cleared — Perigon payment advice received today), payables $15,426."
   },
   "cash_at_bank": 0,
-  "receivables": 5225,
-  "payables": 15426,
-  "working_capital": -10201,
+  "receivables": 5225.00,
+  "payables": 15426.00,
+  "working_capital": -10201.00,
   "status": "tight"
 }

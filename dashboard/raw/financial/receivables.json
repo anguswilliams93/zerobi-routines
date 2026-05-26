@@ -1,16 +1,10 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-25T07:08:00+10:00",
+    "fetched_at": "2026-05-27T07:09:10+10:00",
     "source": "claude_ai_Xero__find_invoice",
-    "ok": true
+    "ok": true,
+    "note": "contacts_and_receivables returned notice 'no data' — no AUTHORISED outstanding invoices. Perigon payment advice for 26 May received today suggests INV-ZBI0126 ($5,225) has been paid."
   },
-  "items": [
-    {
-      "contact": "Perigon Group",
-      "amount": 5225,
-      "due_date": "2026-05-25",
-      "days_overdue": 0
-    }
-  ],
-  "total": 5225
+  "items": [],
+  "total": 0
 }

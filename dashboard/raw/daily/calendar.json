@@ -1,18 +1,8 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-25T07:08:00+10:00",
+    "fetched_at": "2026-05-27T07:09:10+10:00",
     "source": "zapier_google_calendar_find_events",
     "ok": true
   },
-  "events": [
-    {
-      "id": "74qj0cpo6sqj8b9pclgjcb9k6gs36b9o6lhj2b9pc8q64p9m75gm4c9o70",
-      "start": "2026-05-25T10:30:00+10:00",
-      "end": "2026-05-25T11:10:00+10:00",
-      "title": "Appointment with Dr Sireesha Pathikonda",
-      "attendees": [],
-      "location": "Shop 201-202/87 Griffith Street, Coolangatta 4225 QLD",
-      "all_day": false
-    }
-  ]
+  "events": []
 }

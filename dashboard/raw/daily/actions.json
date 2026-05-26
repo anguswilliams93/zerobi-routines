@@ -1,8 +1,21 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-25T07:08:00+10:00",
+    "fetched_at": "2026-05-27T07:09:10+10:00",
     "source": "daily-routine",
     "ok": true
   },
-  "actions": []
+  "actions": [
+    {
+      "kind": "task",
+      "title": "CommBank Business 3231 — top up for rescheduled $1,941.15 ZEROBI PAY AT transfer (NSF 27 May, retry 28 May)",
+      "detail": "CommBank notified 1st attempt NSF. NetBank rescheduled to next business day. Ensure cleared funds ≥$1,941.15 in Business Transaction 3231 before retry.",
+      "created_at": "2026-05-27T07:09:10+10:00"
+    },
+    {
+      "kind": "task",
+      "title": "Microsoft 365 Business Premium — recurring billing OFF, confirm renewal intent",
+      "detail": "Email received 26 May: recurring billing turned OFF. Subscription will expire without renewal. Check Microsoft Admin Center and decide: re-enable auto-renewal or cancel intentionally.",
+      "created_at": "2026-05-27T07:09:10+10:00"
+    }
+  ]
 }
