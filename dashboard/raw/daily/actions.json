@@ -1,21 +1,27 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-27T07:09:10+10:00",
+    "fetched_at": "2026-05-28T07:18:00+10:00",
     "source": "daily-routine",
     "ok": true
   },
   "actions": [
     {
       "kind": "task",
-      "title": "CommBank Business 3231 — top up for rescheduled $1,941.15 ZEROBI PAY AT transfer (NSF 27 May, retry 28 May)",
-      "detail": "CommBank notified 1st attempt NSF. NetBank rescheduled to next business day. Ensure cleared funds ≥$1,941.15 in Business Transaction 3231 before retry.",
-      "created_at": "2026-05-27T07:09:10+10:00"
+      "title": "Pay Coastal Lawns INV-0885 $77 — due 2 June 2026",
+      "detail": "Invoice received via Xero. AUD $77.00 due 2026-06-02.",
+      "created_at": "2026-05-28T07:18:00+10:00"
     },
     {
       "kind": "task",
-      "title": "Microsoft 365 Business Premium — recurring billing OFF, confirm renewal intent",
-      "detail": "Email received 26 May: recurring billing turned OFF. Subscription will expire without renewal. Check Microsoft Admin Center and decide: re-enable auto-renewal or cancel intentionally.",
-      "created_at": "2026-05-27T07:09:10+10:00"
+      "title": "Submit Fiat24 tax residency info — deadline 29 May 2026",
+      "detail": "Account services restricted if not submitted by 29 May. Token ID: 76508.",
+      "created_at": "2026-05-28T07:18:00+10:00"
+    },
+    {
+      "kind": "task",
+      "title": "Supabase Data API breaking change — add explicit grants before May 30",
+      "detail": "New projects won't auto-expose public schema tables from May 30; existing projects Oct 30.",
+      "created_at": "2026-05-28T07:18:00+10:00"
     }
   ]
 }
