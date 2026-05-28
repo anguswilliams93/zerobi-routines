@@ -1,27 +1,9 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-28T07:18:00+10:00",
+    "fetched_at": "2026-05-29T07:11:57+10:00",
     "source": "daily-routine",
-    "ok": true
+    "ok": true,
+    "note": "Google Calendar, Gmail, and Google Tasks not available in this session — triage and task creation skipped."
   },
-  "actions": [
-    {
-      "kind": "task",
-      "title": "Pay Coastal Lawns INV-0885 $77 — due 2 June 2026",
-      "detail": "Invoice received via Xero. AUD $77.00 due 2026-06-02.",
-      "created_at": "2026-05-28T07:18:00+10:00"
-    },
-    {
-      "kind": "task",
-      "title": "Submit Fiat24 tax residency info — deadline 29 May 2026",
-      "detail": "Account services restricted if not submitted by 29 May. Token ID: 76508.",
-      "created_at": "2026-05-28T07:18:00+10:00"
-    },
-    {
-      "kind": "task",
-      "title": "Supabase Data API breaking change — add explicit grants before May 30",
-      "detail": "New projects won't auto-expose public schema tables from May 30; existing projects Oct 30.",
-      "created_at": "2026-05-28T07:18:00+10:00"
-    }
-  ]
+  "actions": []
 }

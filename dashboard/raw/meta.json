@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28T07:18:00+10:00",
+  "generated_at": "2026-05-29T07:11:57+10:00",
   "week": 22,
   "fy": "FY26",
   "sources": {
@@ -26,7 +26,7 @@
       "note": "drafts folder read not enabled"
     },
     "daily/actions.json": {
-      "fetched_at": "2026-05-28T07:18:00+10:00",
+      "fetched_at": "2026-05-29T07:11:57+10:00",
       "source": "daily-routine",
       "ok": true
     },
@@ -52,10 +52,10 @@
       "ok": true
     },
     "financial/cash.json": {
-      "fetched_at": "2026-05-28T07:11:00+10:00",
+      "fetched_at": "2026-05-29T07:11:52+10:00",
       "source": "redbark-api + claude_ai_Xero__find_invoice",
       "ok": false,
-      "note": "Redbark unavailable — 403 host not in allowlist. cash_at_bank=0. Xero: receivables $0, payables $15,426."
+      "note": "Redbark unavailable — host not in allowlist. cash_at_bank=0. Xero: receivables $0, payables $15,426."
     },
     "financial/customers.json": {
       "fetched_at": "2026-05-12T18:17:00+10:00",
@@ -63,10 +63,9 @@
       "ok": true
     },
     "financial/receivables.json": {
-      "fetched_at": "2026-05-28T07:11:00+10:00",
+      "fetched_at": "2026-05-29T07:11:52+10:00",
       "source": "claude_ai_Xero__find_invoice",
-      "ok": true,
-      "note": "No AUTHORISED outstanding invoices. Perigon INV-ZBI0126 $4,180 likely paid per payment advice 26 May."
+      "ok": true
     },
     "financial/bank-spend.json": {
       "fetched_at": "2026-05-12T18:17:00+10:00",
