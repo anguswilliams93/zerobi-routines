@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-29T07:11:52+10:00",
+    "fetched_at": "2026-05-29T20:10:00+10:00",
     "source": "claude_ai_Xero__find_invoice",
     "ok": true,
     "note": "contacts_and_receivables returned notice 'no data' — no AUTHORISED outstanding invoices."

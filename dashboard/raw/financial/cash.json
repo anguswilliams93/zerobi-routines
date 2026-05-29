@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-29T07:11:52+10:00",
+    "fetched_at": "2026-05-29T20:10:00+10:00",
     "source": "redbark-api + claude_ai_Xero__find_invoice",
     "ok": false,
-    "note": "Redbark unavailable — host not in allowlist. cash_at_bank=0. Xero: receivables $0 (no AUTHORISED invoices), payables $15,426."
+    "note": "Redbark unavailable (API key not set in session). cash_at_bank=0. Xero (snapshot 2026-05-28): cash balance $16,840.06, receivables $0 (no AUTHORISED invoices), payables $15,426."
   },
   "cash_at_bank": 0,
   "receivables": 0,
