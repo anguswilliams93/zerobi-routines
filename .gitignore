@@ -1,1 +1,5 @@
 kpi-dashboard-mcp.skill
+
+# Python
+__pycache__/
+*.pyc
