@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "fetched_at": "2026-05-31T21:12:00+10:00",
+    "fetched_at": "2026-06-01T10:06:00+10:00",
     "source": "redbark-api + claude_ai_Xero__find_invoice",
     "ok": false,
-    "note": "Redbark API not accessible from this environment (host not in allowlist). cash_at_bank set to 0. Xero-reported cash balance (proxy, all connected banks): $16,423.56 (snapshot 2026-05-31). Receivables from Xero: $6,930.00 (2 AUTHORISED invoices — INV-ZBI0127 Perigon $5,225 due 2026-06-02, INV-ZBI0128 Splatt $1,705 due 2026-06-15). Payables: $0."
+    "note": "Redbark API key not set in this environment — cash_at_bank set to 0. Xero snapshot 2026-06-01: cash_balance proxy $930.29, receivables $6,930 (2 AUTHORISED invoices — INV-ZBI0127 Perigon $5,225 due 2026-06-02, INV-ZBI0128 Splatt $1,705 due 2026-06-15), payables $0."
   },
   "cash_at_bank": 0,
   "receivables": 6930.00,

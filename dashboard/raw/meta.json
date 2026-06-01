@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-05-31T21:12:00+10:00",
-  "week": 22,
+  "generated_at": "2026-06-01T10:15:00+10:00",
+  "week": 23,
   "fy": "FY26",
   "sources": {
     "daily/calendar.json": {
-      "fetched_at": "2026-05-31T21:12:00+10:00",
+      "fetched_at": "2026-06-01T10:06:00+10:00",
       "source": "zapier_google_calendar_find_events",
       "ok": false,
       "note": "Google Calendar MCP not available in this session"
@@ -27,7 +27,7 @@
       "note": "drafts folder read not enabled"
     },
     "daily/actions.json": {
-      "fetched_at": "2026-05-31T21:12:00+10:00",
+      "fetched_at": "2026-06-01T10:06:00+10:00",
       "source": "daily-routine",
       "ok": true
     },
@@ -53,10 +53,10 @@
       "ok": true
     },
     "financial/cash.json": {
-      "fetched_at": "2026-05-31T21:12:00+10:00",
+      "fetched_at": "2026-06-01T10:06:00+10:00",
       "source": "redbark-api + claude_ai_Xero__find_invoice",
       "ok": false,
-      "note": "Redbark API not accessible from this environment (host not in allowlist). Xero snapshot 2026-05-31: cash $16,423.56, receivables $6,930 (2 AUTHORISED invoices), payables $0."
+      "note": "Redbark API key not set in this environment. Xero snapshot 2026-06-01: cash proxy $930.29, receivables $6,930, payables $0."
     },
     "financial/customers.json": {
       "fetched_at": "2026-05-12T18:17:00+10:00",
@@ -64,7 +64,7 @@
       "ok": true
     },
     "financial/receivables.json": {
-      "fetched_at": "2026-05-31T21:12:00+10:00",
+      "fetched_at": "2026-06-01T10:06:00+10:00",
       "source": "claude_ai_Xero__find_invoice",
       "ok": true
     },
