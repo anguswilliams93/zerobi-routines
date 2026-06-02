@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "fetched_at": "2026-06-01T10:06:00+10:00",
+    "fetched_at": "2026-06-03T07:11:10+10:00",
     "source": "daily-routine",
     "ok": true,
-    "note": "Google Calendar, Gmail, and Google Tasks not available in this session — triage and task creation skipped."
+    "note": "Google Calendar, Gmail, and Google Tasks MCPs not available in this session — triage and task creation skipped. Bleed check skipped — Redbark unavailable."
   },
   "actions": []
 }
