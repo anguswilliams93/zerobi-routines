@@ -1,27 +1,27 @@
 {
-  "generated_at": "2026-06-05T07:12:26+10:00",
+  "generated_at": "2026-06-06T07:12:07+10:00",
   "week": 23,
   "fy": "FY26",
   "sources": {
     "daily/calendar.json": {
-      "fetched_at": "2026-06-05T07:12:26+10:00",
+      "fetched_at": "2026-06-06T07:12:07+10:00",
       "source": "zapier_google_calendar_find_events",
       "ok": false,
       "note": "Google Calendar MCP not available in this session"
     },
     "daily/actions.json": {
-      "fetched_at": "2026-06-05T07:12:26+10:00",
+      "fetched_at": "2026-06-06T07:12:07+10:00",
       "source": "daily-routine",
       "ok": true
     },
     "financial/cash.json": {
-      "fetched_at": "2026-06-05T07:12:26+10:00",
+      "fetched_at": "2026-06-06T07:12:07+10:00",
       "source": "redbark-api + claude_ai_Xero__find_invoice",
       "ok": false,
-      "note": "Redbark API key not set — cash_at_bank 0. Xero: receivables $1,705 (INV-ZBI0128 Splatt due 2026-06-15), payables $0."
+      "note": "Redbark unavailable — network policy blocks api.redbark.co — cash_at_bank 0. Xero: receivables $1,705.00 (INV-ZBI0128 Splatt due 2026-06-15), payables $0."
     },
     "financial/receivables.json": {
-      "fetched_at": "2026-06-05T07:12:26+10:00",
+      "fetched_at": "2026-06-06T07:12:07+10:00",
       "source": "claude_ai_Xero__find_invoice",
       "ok": true
     },
