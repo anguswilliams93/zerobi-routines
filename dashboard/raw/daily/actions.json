@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "fetched_at": "2026-06-06T07:12:07+10:00",
+    "fetched_at": "2026-06-07T07:10:00+10:00",
     "source": "daily-routine",
     "ok": true,
-    "note": "Google Calendar, Gmail, and Google Tasks MCPs not available in this session — triage and task creation skipped. Redbark unavailable (network policy blocks api.redbark.co) — bank data skipped. Saturday — no day-of-week steps."
+    "note": "Google Calendar, Gmail, and Google Tasks MCPs not available in this session — triage and task creation skipped. Redbark unavailable (network policy blocks api.redbark.co) — bank data skipped. Sunday — no day-of-week steps."
   },
   "actions": []
 }
