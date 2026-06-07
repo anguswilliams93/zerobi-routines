@@ -1,10 +1,16 @@
 {
   "_meta": {
-    "fetched_at": "2026-06-07T07:10:00+10:00",
+    "fetched_at": "2026-06-08T07:07:38+10:00",
     "source": "claude_ai_Xero__find_invoice",
     "ok": true
   },
   "items": [
+    {
+      "contact": "Perigon Group",
+      "amount": 5225.00,
+      "due_date": "2026-06-09",
+      "days_overdue": 0
+    },
     {
       "contact": "Splatt Lawyers PTY LTD",
       "amount": 1705.00,
@@ -12,5 +18,5 @@
       "days_overdue": 0
     }
   ],
-  "total": 1705.00
+  "total": 6930.00
 }
