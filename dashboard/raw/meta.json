@@ -1,27 +1,28 @@
 {
-  "generated_at": "2026-06-08T07:07:38+10:00",
+  "generated_at": "2026-06-09T07:09:00+10:00",
   "week": 24,
   "fy": "FY26",
   "sources": {
     "daily/calendar.json": {
-      "fetched_at": "2026-06-08T07:07:38+10:00",
+      "fetched_at": "2026-06-09T07:08:23+10:00",
       "source": "zapier_google_calendar_find_events",
       "ok": false,
       "note": "Google Calendar MCP not available in this session"
     },
     "daily/actions.json": {
-      "fetched_at": "2026-06-08T07:07:38+10:00",
+      "fetched_at": "2026-06-09T07:08:23+10:00",
       "source": "daily-routine",
-      "ok": true
+      "ok": false,
+      "note": "Google Tasks and Gmail MCPs not available in this session"
     },
     "financial/cash.json": {
-      "fetched_at": "2026-06-08T07:07:38+10:00",
+      "fetched_at": "2026-06-09T07:08:23+10:00",
       "source": "redbark-api + claude_ai_Xero__find_invoice",
       "ok": false,
-      "note": "Redbark unavailable — network policy blocks api.redbark.co — cash_at_bank 0. Xero: receivables $6,930.00 (INV-ZBI0129 Perigon $5,225 due 2026-06-09, INV-ZBI0128 Splatt $1,705 due 2026-06-15), payables $0."
+      "note": "Redbark unavailable (REDBARK_API_KEY not set) — cash_at_bank 0. Xero snapshot 2026-06-09: receivables $6,930.00 (INV-ZBI0129 Perigon Group $5,225 due today 2026-06-09, INV-ZBI0128 Splatt Lawyers $1,705 due 2026-06-15), payables $0."
     },
     "financial/receivables.json": {
-      "fetched_at": "2026-06-08T07:07:38+10:00",
+      "fetched_at": "2026-06-09T07:08:23+10:00",
       "source": "claude_ai_Xero__find_invoice",
       "ok": true
     },
