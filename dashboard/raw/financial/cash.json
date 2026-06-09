@@ -1,13 +1,13 @@
 {
   "_meta": {
-    "fetched_at": "2026-06-09T07:08:23+10:00",
+    "fetched_at": "2026-06-09T21:07:00+10:00",
     "source": "redbark-api + claude_ai_Xero__find_invoice",
     "ok": false,
-    "note": "Redbark unavailable (REDBARK_API_KEY not set) — cash_at_bank 0. Xero snapshot 2026-06-09: receivables $6,930.00 (INV-ZBI0129 Perigon Group $5,225 due today 2026-06-09, INV-ZBI0128 Splatt Lawyers $1,705 due 2026-06-15), payables $0."
+    "note": "Redbark unavailable (REDBARK_API_KEY not set) — cash_at_bank 0. Xero 2026-06-09: receivables $1,947.00 (INV-ZBI0128 Splatt $1,705 due 2026-06-15, INV-ZBI0130 LAND BASED SERVICE $242 due 2026-06-24), payables $0. INV-ZBI0129 Perigon $5,225 no longer on AR (cleared since prior run)."
   },
   "cash_at_bank": 0,
-  "receivables": 6930.00,
+  "receivables": 1947.00,
   "payables": 0,
-  "working_capital": 6930.00,
+  "working_capital": 1947.00,
   "status": "tight"
 }

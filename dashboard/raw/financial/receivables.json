@@ -1,22 +1,22 @@
 {
   "_meta": {
-    "fetched_at": "2026-06-09T07:08:23+10:00",
+    "fetched_at": "2026-06-09T21:07:00+10:00",
     "source": "claude_ai_Xero__find_invoice",
     "ok": true
   },
   "items": [
     {
-      "contact": "Perigon Group",
-      "amount": 5225.00,
-      "due_date": "2026-06-09",
-      "days_overdue": 0
-    },
-    {
       "contact": "Splatt Lawyers PTY LTD",
       "amount": 1705.00,
       "due_date": "2026-06-15",
       "days_overdue": 0
+    },
+    {
+      "contact": "LAND BASED SERVICE",
+      "amount": 242.00,
+      "due_date": "2026-06-24",
+      "days_overdue": 0
     }
   ],
-  "total": 6930.00
+  "total": 1947.00
 }
