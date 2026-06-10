@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "fetched_at": "2026-06-09T21:07:00+10:00",
+    "fetched_at": "2026-06-11T07:10:00+10:00",
     "source": "daily-routine",
     "ok": false,
-    "note": "Google Tasks and Gmail MCPs not available in this session — triage and task creation skipped. Redbark unavailable (REDBARK_API_KEY not set). Tuesday — no day-of-week steps."
+    "note": "Google Tasks and Gmail MCPs not available in this session — triage and task creation skipped. Redbark unavailable (REDBARK_API_KEY not set). Wednesday — bleed check skipped (Redbark unavailable)."
   },
   "actions": []
 }
