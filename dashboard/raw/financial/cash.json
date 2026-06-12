@@ -1,13 +1,13 @@
 {
   "_meta": {
-    "fetched_at": "2026-06-11T06:39:09+10:00",
+    "fetched_at": "2026-06-12T10:36:43+10:00",
     "source": "redbark-api + claude_ai_Xero__find_invoice",
     "ok": false,
-    "note": "Redbark unavailable (REDBARK_API_KEY not set) — cash_at_bank 0. Xero 2026-06-10: receivables $1,947.00 (INV-ZBI0128 Splatt $1,705 due 2026-06-15, INV-ZBI0130 LAND BASED SERVICE $242 due 2026-06-24), payables $0."
+    "note": "Redbark unavailable (REDBARK_API_KEY not set) — cash_at_bank 0. Xero 2026-06-12: receivables $242.00 (INV-ZBI0130 LAND BASED SERVICE $242 due 2026-06-24). Splatt INV-ZBI0128 $1,705 no longer in authorised invoices — likely paid/reconciled."
   },
   "cash_at_bank": 0,
-  "receivables": 1947.00,
+  "receivables": 242.00,
   "payables": 0,
-  "working_capital": 1947.00,
+  "working_capital": 242.00,
   "status": "tight"
 }

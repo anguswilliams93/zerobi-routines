@@ -1,16 +1,10 @@
 {
   "_meta": {
-    "fetched_at": "2026-06-11T07:06:03+10:00",
+    "fetched_at": "2026-06-12T10:36:43+10:00",
     "source": "claude_ai_Xero__find_invoice",
     "ok": true
   },
   "items": [
-    {
-      "contact": "Splatt Lawyers PTY LTD",
-      "amount": 1705.00,
-      "due_date": "2026-06-15",
-      "days_overdue": 0
-    },
     {
       "contact": "LAND BASED SERVICE",
       "amount": 242.00,
@@ -18,5 +12,5 @@
       "days_overdue": 0
     }
   ],
-  "total": 1947.00
+  "total": 242.00
 }
