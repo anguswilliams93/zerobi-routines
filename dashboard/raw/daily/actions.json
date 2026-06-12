@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "fetched_at": "2026-06-12T10:37:42+10:00",
+    "fetched_at": "2026-06-12T21:05:00+10:00",
     "source": "daily-routine",
     "ok": false,
     "note": "Google Tasks and Gmail MCPs not available in this session — triage and task creation skipped. Redbark unavailable (REDBARK_API_KEY not set). Friday — Perigon timesheet step skipped (Google Tasks unavailable)."

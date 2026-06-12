@@ -1,28 +1,28 @@
 {
-  "generated_at": "2026-06-12T10:37:42+10:00",
+  "generated_at": "2026-06-12T21:05:00+10:00",
   "week": 24,
   "fy": "FY26",
   "sources": {
     "daily/calendar.json": {
-      "fetched_at": "2026-06-12T10:37:42+10:00",
+      "fetched_at": "2026-06-12T21:05:00+10:00",
       "source": "zapier_google_calendar_find_events",
       "ok": false,
       "note": "Google Calendar MCP not available in this session"
     },
     "daily/actions.json": {
-      "fetched_at": "2026-06-12T10:37:42+10:00",
+      "fetched_at": "2026-06-12T21:05:00+10:00",
       "source": "daily-routine",
       "ok": false,
       "note": "Google Tasks and Gmail MCPs not available in this session — triage and task creation skipped. Redbark unavailable (REDBARK_API_KEY not set). Friday — Perigon timesheet step skipped (Google Tasks unavailable)."
     },
     "financial/cash.json": {
-      "fetched_at": "2026-06-12T10:36:43+10:00",
+      "fetched_at": "2026-06-12T21:05:00+10:00",
       "source": "redbark-api + claude_ai_Xero__find_invoice",
       "ok": false,
-      "note": "Redbark unavailable (REDBARK_API_KEY not set) — cash_at_bank 0. Splatt INV-ZBI0128 $1,705 no longer in authorised invoices."
+      "note": "Redbark unavailable (REDBARK_API_KEY not set) — cash_at_bank 0."
     },
     "financial/receivables.json": {
-      "fetched_at": "2026-06-12T10:36:43+10:00",
+      "fetched_at": "2026-06-12T21:05:00+10:00",
       "source": "claude_ai_Xero__find_invoice",
       "ok": true
     },
