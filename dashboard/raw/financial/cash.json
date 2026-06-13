@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "fetched_at": "2026-06-12T21:05:00+10:00",
+    "fetched_at": "2026-06-13T21:05:00+10:00",
     "source": "redbark-api + claude_ai_Xero__find_invoice",
     "ok": false,
-    "note": "Redbark unavailable (REDBARK_API_KEY not set) — cash_at_bank 0. Xero reports internal cash_balance $6,683.57 (not used — Redbark is source of truth for cleared cash). Xero receivables: $242.00 (INV-ZBI0130 LAND BASED SERVICE due 2026-06-24)."
+    "note": "Redbark unavailable (api.redbark.co blocked by network egress policy) — cash_at_bank 0. Xero reports internal cash_balance $6,683.57 (not used — Redbark is source of truth for cleared cash). Xero receivables: $242.00 (INV-ZBI0130 LAND BASED SERVICE due 2026-06-24)."
   },
   "cash_at_bank": 0,
   "receivables": 242.00,
