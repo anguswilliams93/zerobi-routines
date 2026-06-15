@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "fetched_at": "2026-06-15T07:04:51+10:00",
+    "fetched_at": "2026-06-16T07:04:43+10:00",
     "source": "redbark-api + claude_ai_Xero__find_invoice",
     "ok": false,
-    "note": "REDBARK_API_KEY not set — cash_at_bank 0. Xero receivables: $5,467.00 (INV-ZBI0131 Perigon Group $5,225.00 due 2026-06-16; INV-ZBI0130 LAND BASED SERVICE $242.00 due 2026-06-24)."
+    "note": "REDBARK_API_KEY not set — cash_at_bank 0. api.redbark.co blocked by egress allowlist. Xero receivables: $5,467.00 (INV-ZBI0131 Perigon Group $5,225.00 due 2026-06-16; INV-ZBI0130 LAND BASED SERVICE $242.00 due 2026-06-24)."
   },
   "cash_at_bank": 0,
   "receivables": 5467.00,
