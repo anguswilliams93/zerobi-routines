@@ -1,16 +1,10 @@
 {
   "_meta": {
-    "fetched_at": "2026-06-16T07:04:43+10:00",
+    "fetched_at": "2026-06-17T07:04:06+10:00",
     "source": "claude_ai_Xero__find_invoice",
     "ok": true
   },
   "items": [
-    {
-      "contact": "Perigon Group",
-      "amount": 5225.00,
-      "due_date": "2026-06-16",
-      "days_overdue": 0
-    },
     {
       "contact": "LAND BASED SERVICE",
       "amount": 242.00,
@@ -18,5 +12,5 @@
       "days_overdue": 0
     }
   ],
-  "total": 5467.00
+  "total": 242.00
 }

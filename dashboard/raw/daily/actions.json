@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "fetched_at": "2026-06-16T07:04:43+10:00",
+    "fetched_at": "2026-06-17T07:04:06+10:00",
     "source": "daily-routine",
     "ok": false,
-    "note": "Google Tasks and Gmail MCPs not available in this session — triage and task creation skipped. REDBARK_API_KEY not set and api.redbark.co blocked by egress allowlist — bank data unavailable."
+    "note": "Google Tasks and Gmail MCPs not available in this session — triage and task creation skipped. REDBARK_API_KEY not set — bank data unavailable. Bleed check skipped — Redbark unavailable (Wednesday)."
   },
   "actions": []
 }
