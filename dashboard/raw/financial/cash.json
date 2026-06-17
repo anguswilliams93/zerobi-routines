@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "fetched_at": "2026-06-17T07:04:06+10:00",
+    "fetched_at": "2026-06-18T07:04:12+10:00",
     "source": "redbark-api + claude_ai_Xero__find_invoice",
     "ok": false,
     "note": "REDBARK_API_KEY not set — cash_at_bank 0. Xero receivables: $242.00 (INV-ZBI0130 LAND BASED SERVICE $242.00 due 2026-06-24). INV-ZBI0131 Perigon Group $5,225.00 no longer AUTHORISED — likely paid 2026-06-16."
